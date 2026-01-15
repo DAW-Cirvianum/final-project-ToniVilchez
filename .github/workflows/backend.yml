@@ -5,57 +5,37 @@ on:
     branches: [ main ]
     paths:
       - "backend-project/**"
-      - ".github/workflows/backend.yml"
 
 env:
-  WORKING_DIRECTORY: ./backend-project
+  AZURE_WEBAPP_NAME: 'backend-toni'
+  AZURE_WEBAPP_PACKAGE_PATH: './backend-project'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: "8.3"
-        extensions: mbstring, pdo_mysql, bcmath, intl, fileinfo, openssl, tokenizer, xml
-        coverage: none
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo_mysql, bcmath, intl, fileinfo, openssl, tokenizer, xml
 
-    - name: Navigate to backend directory
-      working-directory: ${{ env.WORKING_DIRECTORY }}
-      run: pwd && ls -la
+      - name: Install dependencies
+        working-directory: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        run: |
+          composer install --no-dev --optimize-autoloader --no-interaction
 
-    - name: Install Composer dependencies
-      working-directory: ${{ env.WORKING_DIRECTORY }}
-      run: composer install --no-dev --optimize-autoloader --no-interaction
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Create .env file
-      working-directory: ${{ env.WORKING_DIRECTORY }}
-      run: |
-        echo "APP_NAME=Laravel" > .env
-        echo "APP_ENV=production" >> .env
-        echo "APP_KEY=" >> .env
-        echo "APP_DEBUG=false" >> .env
-        echo "APP_URL=https://${{ secrets.AZURE_WEBAPP_NAME }}.azurewebsites.net" >> .env
-
-    - name: Generate key
-      working-directory: ${{ env.WORKING_DIRECTORY }}
-      run: php artisan key:generate --force
-
-    - name: Config cache
-      working-directory: ${{ env.WORKING_DIRECTORY }}
-      run: php artisan config:cache
-
-    - name: Route cache
-      working-directory: ${{ env.WORKING_DIRECTORY }}
-      run: php artisan route:cache
-
-    - name: Deploy to Azure WebApp
-      uses: azure/webapps-deploy@v3
-      with:
-        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-        package: ${{ env.WORKING_DIRECTORY }}
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
