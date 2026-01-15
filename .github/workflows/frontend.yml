@@ -36,4 +36,3 @@ jobs:
           action: upload
           app_location: frontend-project
           output_location: frontend-project/dist
-``
