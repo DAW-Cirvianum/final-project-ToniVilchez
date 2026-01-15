@@ -59,3 +59,13 @@ Route::get('/categories/{category}/words-only', function ($categoryId) {
         'data' => $words
     ]);
 });
+
+// Ruta para test CORS
+Route::get('/test-cors', function () {
+    return response()->json([
+        'message' => 'CORS is working!',
+        'timestamp' => now(),
+        'origin' => request()->header('Origin'),
+        'allowed_origins' => config('cors.allowed_origins', []),
+    ]);
+});

@@ -1,10 +1,15 @@
 import axios from "axios";
 
+const isProduction = window.location.hostname.includes('azurestaticapps.net');
+
 const api = axios.create({
-  baseURL: "https://backend-toni-bvcxdnaegrgkgkbt.westeurope-01.azurewebsites.net/api",
+  baseURL: isProduction 
+    ? "https://backend-toni-bvcxdnaegrgkgkbt.westeurope-01.azurewebsites.net/api"
+    : "http://localhost:8000/api",
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
   },
   withCredentials: true,
 });

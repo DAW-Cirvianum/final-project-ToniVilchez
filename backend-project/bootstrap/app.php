@@ -13,18 +13,16 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->alias([
-            'admin' => IsAdmin::class,
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->api(prepend: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        ]);
+        
+        $middleware->validateCsrfTokens(except: [
+            'api/*',
+            'webhook/*',
         ]);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->render(function (AuthenticationException $e, \Illuminate\Http\Request $request) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'message' => 'Unauthorized',
-                    'error' => 'Authentication required'
-                ], 401);
-            }
-        });
+    ->withExceptions(function (Exceptions $exceptions) {
+        //
     })->create();
