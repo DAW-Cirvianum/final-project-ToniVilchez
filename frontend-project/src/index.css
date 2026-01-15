@@ -16,7 +16,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Variables minimalistas */
   --primary: #6366f1;
   --primary-light: #818cf8;
   --primary-dark: #4f46e5;
@@ -47,12 +46,10 @@ body {
   min-height: 100vh;
 }
 
-/* Transiciones suaves */
 * {
   transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
-/* Scrollbar minimalista */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -71,19 +68,16 @@ body {
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* Selection */
 ::selection {
   background-color: var(--primary);
   color: white;
 }
 
-/* Focus outline */
 :focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -103,7 +97,6 @@ body {
   }
 }
 
-/* Custom utility classes */
 @layer utilities {
   .glass-effect {
     @apply backdrop-blur-lg bg-white/5 border border-white/10;

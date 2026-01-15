@@ -8,9 +8,6 @@ use Illuminate\Http\Request;
 
 class WordController extends Controller
 {
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request, Category $category)
     {
         $request->validate([
@@ -26,9 +23,6 @@ class WordController extends Controller
         ], 201);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Word $word)
     {
         $word->delete();

@@ -22,7 +22,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/forgot-password', [PasswordResetController::class, 'send']);
     Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
-    // Perfil de usuario (mantener lo nuevo del perfil)
     Route::put('/user', [UserController::class, 'updateProfile']);
     Route::post('/user/avatar', [UserController::class, 'uploadAvatar']);
 
@@ -43,11 +42,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/games/{game}/rounds', [RoundController::class, 'store']);
 });
 
-// Ruta específica per obtenir paraules d'una categoria
 Route::get('/categories/{category}/words-only', function ($categoryId) {
     $category = \App\Models\Category::findOrFail($categoryId);
     
-    // Verifica permisos
     if ($category->user_id && $category->user_id !== auth()->id()) {
         return response()->json([
             'success' => false,

@@ -1,8 +1,5 @@
 import apiClient from "./api";
 
-/**
- * Servicios de autenticación
- */
 export const authService = {
   register: (data) => apiClient.post('/register', data),
   login: (login, password) => apiClient.post('/login', { login, password }),
@@ -12,9 +9,7 @@ export const authService = {
     apiClient.post('/reset-password', { email, token, password, password_confirmation: passwordConfirmation }),
 };
 
-/**
- * Servicios de categorías
- */
+
 export const categoryService = {
   getAll: () => apiClient.get('/categories'),
   getById: (id) => apiClient.get(`/categories/${id}`),
@@ -23,18 +18,13 @@ export const categoryService = {
   delete: (id) => apiClient.delete(`/categories/${id}`),
 };
 
-/**
- * Servicios de palabras
- */
+
 export const wordService = {
   getByCategory: (categoryId) => apiClient.get(`/categories/${categoryId}`),
   create: (categoryId, data) => apiClient.post(`/categories/${categoryId}/words`, data),
   delete: (id) => apiClient.delete(`/words/${id}`),
 };
 
-/**
- * Servicios de juegos
- */
 export const gameService = {
   getAll: () => apiClient.get('/games'),
   getById: (id) => apiClient.get(`/games/${id}`),
@@ -43,9 +33,7 @@ export const gameService = {
   createRound: (gameId, data) => apiClient.post(`/games/${gameId}/rounds`, data),
 };
 
-/**
- * Servicios de usuario
- */
+
 export const userService = {
   getProfile: () => apiClient.get('/user'),
   updateProfile: (data) => apiClient.put('/user', data),

@@ -10,7 +10,6 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        // Buscar usuario admin o crear uno
         $admin = User::where('role', 'admin')->first();
         
         if (!$admin) {
@@ -22,7 +21,6 @@ class CategorySeeder extends Seeder
             ]);
         }
 
-        // Crear categorías predeterminadas
         $defaultCategories = [
             [
                 'name' => 'Animales',
@@ -60,7 +58,6 @@ class CategorySeeder extends Seeder
             Category::create($category);
         }
 
-        // Añadir algunas palabras a cada categoría
         $animals = Category::where('name', 'Animales')->first();
         if ($animals) {
             $animals->words()->createMany([

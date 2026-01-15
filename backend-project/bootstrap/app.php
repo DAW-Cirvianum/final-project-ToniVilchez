@@ -14,13 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Registrar alias de middleware
         $middleware->alias([
             'admin' => IsAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        // Para API requests, devolver JSON en lugar de redirigir a login
         $exceptions->render(function (AuthenticationException $e, \Illuminate\Http\Request $request) {
             if ($request->expectsJson()) {
                 return response()->json([

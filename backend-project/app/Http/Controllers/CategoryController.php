@@ -12,13 +12,11 @@ class CategoryController extends Controller
     {
         $user = Auth::user();
         
-        // Si és admin, mostra totes les categories
         if ($user->role === 'admin') {
             $categories = Category::withCount('words')
                 ->with('user:id,name')
                 ->get();
         } else {
-            // Si no és admin, només les seves i les per defecte
             $categories = Category::withCount('words')
                 ->with('user:id,name')
                 ->where(function($query) use ($user) {
@@ -57,7 +55,6 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        // Verificar permisos
         if ($category->user_id && $category->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
             return response()->json([
                 'success' => false,
@@ -75,7 +72,6 @@ class CategoryController extends Controller
 
     public function update(Request $request, Category $category)
     {
-        // Verificar permisos
         if ($category->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
             return response()->json([
                 'success' => false,
@@ -102,7 +98,6 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        // Verificar permisos
         if ($category->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
             return response()->json([
                 'success' => false,
@@ -110,7 +105,6 @@ class CategoryController extends Controller
             ], 403);
         }
 
-        // No permetre eliminar categories per defecte
         if ($category->is_default) {
             return response()->json([
                 'success' => false,

@@ -8,7 +8,6 @@ class Category extends Model
 {
     protected $fillable = ['name', 'description', 'is_default', 'user_id'];
 
-    // Atributs addicionals que volem incloure
     protected $appends = ['words_count'];
 
     public function user()
@@ -31,7 +30,6 @@ class Category extends Model
         return $this->hasMany(Game::class);
     }
 
-    // Accessor per al recompte de paraules
     public function getWordsCountAttribute()
     {
         return $this->words()->count();

@@ -6,22 +6,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-/**
- * AdminController
- * Gestiona la zona de administración con vistas Blade
- * 
- * Requisito: Admin panel con Blade views que permite:
- * - Ver lista de usuarios
- * - Editar datos de usuarios
- * - Cambiar roles
- * - Activar/desactivar cuentas
- * - Eliminar usuarios
- */
+
 class AdminController extends Controller
 {
-    /**
-     * Dashboard administrativo
-     */
     public function dashboard()
     {
         $totalUsers = User::count();
@@ -39,24 +26,18 @@ class AdminController extends Controller
         ]);
     }
 
-    /**
-     * Listar todos los usuarios
-     */
     public function listUsers(Request $request)
     {
         $query = User::query();
 
-        // Filtrar por rol
         if ($request->has('role') && $request->role) {
             $query->where('role', $request->role);
         }
 
-        // Filtrar por estado activo
         if ($request->has('active') && $request->active !== '') {
             $query->where('is_active', (bool)$request->active);
         }
 
-        // Buscar por nombre o email
         if ($request->has('search') && $request->search) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -65,7 +46,6 @@ class AdminController extends Controller
             });
         }
 
-        // Ordenar
         $sortBy = $request->get('sort', 'created_at');
         $sortOrder = $request->get('order', 'desc');
         $query->orderBy($sortBy, $sortOrder);
@@ -78,9 +58,6 @@ class AdminController extends Controller
         ]);
     }
 
-    /**
-     * Ver detalles de un usuario
-     */
     public function showUser(User $user)
     {
         return view('admin.users.show', [
@@ -88,9 +65,6 @@ class AdminController extends Controller
         ]);
     }
 
-    /**
-     * Actualizar usuario
-     */
     public function updateUser(Request $request, User $user)
     {
         $validated = $request->validate([
@@ -111,16 +85,12 @@ class AdminController extends Controller
         return back()->with('message', 'Usuario actualizado correctamente');
     }
 
-    /**
-     * Cambiar rol de usuario
-     */
     public function updateRole(Request $request, User $user)
     {
         $validated = $request->validate([
             'role' => 'required|in:user,admin',
         ]);
 
-        // Proteger el último admin
         if ($user->role === 'admin' && $validated['role'] === 'user') {
             $adminCount = User::where('role', 'admin')->count();
             if ($adminCount <= 1) {
@@ -133,12 +103,8 @@ class AdminController extends Controller
         return back()->with('message', 'Rol actualizado correctamente');
     }
 
-    /**
-     * Activar/Desactivar usuario
-     */
     public function toggleActive(Request $request, User $user)
     {
-        // Proteger al último admin activo
         if ($user->role === 'admin' && $user->is_active) {
             $activeAdmins = User::where('role', 'admin')
                                 ->where('is_active', true)
@@ -156,12 +122,8 @@ class AdminController extends Controller
         return back()->with('message', "Usuario {$status} correctamente");
     }
 
-    /**
-     * Eliminar usuario
-     */
     public function deleteUser(User $user)
     {
-        // Proteger al último admin
         if ($user->role === 'admin') {
             $adminCount = User::where('role', 'admin')->count();
             if ($adminCount <= 1) {

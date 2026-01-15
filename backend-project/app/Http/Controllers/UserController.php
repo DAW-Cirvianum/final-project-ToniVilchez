@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    /**
-     * Actualizar perfil de usuario
-     */
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
@@ -32,23 +29,18 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Subir avatar de usuario
-     */
     public function uploadAvatar(Request $request)
     {
         $request->validate([
-            'avatar' => 'required|image|max:5120', // 5MB máximo
+            'avatar' => 'required|image|max:5120',
         ]);
 
         $user = Auth::user();
         
-        // Eliminar avatar anterior si existe
         if ($user->avatar_path) {
             Storage::disk('public')->delete($user->avatar_path);
         }
 
-        // Guardar nueva imagen
         $path = $request->file('avatar')->store('avatars', 'public');
         
         $user->update([
