@@ -1,0 +1,70 @@
+{
+  "app": {
+    "title": "Impostor Game",
+    "subtitle": "Juega a adivinar quién es el impostor"
+  },
+  "nav": {
+    "home": "Inicio",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar Sesión",
+    "categories": "Categorías",
+    "games": "Juegos"
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "email": "Email",
+    "username": "Nombre de Usuario",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "rememberMe": "Recuérdame",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes cuenta?",
+    "haveAccount": "¿Ya tienes cuenta?",
+    "language": "Idioma"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Agregar",
+    "back": "Volver",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sortBy": "Ordenar por",
+    "success": "Éxito",
+    "error": "Error",
+    "warning": "Advertencia",
+    "info": "Información"
+  },
+  "categories": {
+    "title": "Categorías",
+    "create": "Crear Categoría",
+    "new": "Nueva Categoría",
+    "name": "Nombre",
+    "description": "Descripción",
+    "words": "palabras",
+    "play": "Jugar",
+    "notFound": "No se encontraron categorías"
+  },
+  "game": {
+    "title": "Juego",
+    "setup": "Configurar Juego",
+    "players": "Jugadores",
+    "addPlayer": "Agregar Jugador",
+    "rounds": "Rondas",
+    "newRound": "Nueva Ronda",
+    "start": "Comenzar Juego",
+    "impostor": "Impostor",
+    "word": "Palabra"
+  },
+  "messages": {
+    "sessionExpired": "Tu sesión ha expirado",
+    "error": "Ha ocurrido un error",
+    "success": "Operación completada con éxito",
+    "pleaseLogin": "Por favor, inicia sesión"
+  }
+}

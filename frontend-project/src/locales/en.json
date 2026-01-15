@@ -1,0 +1,70 @@
+{
+  "app": {
+    "title": "Impostor Game",
+    "subtitle": "Play to guess who the impostor is"
+  },
+  "nav": {
+    "home": "Home",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "categories": "Categories",
+    "games": "Games"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "username": "Username",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "rememberMe": "Remember Me",
+    "forgotPassword": "Forgot your password?",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "language": "Language"
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "back": "Back",
+    "search": "Search",
+    "filter": "Filter",
+    "sortBy": "Sort by",
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info"
+  },
+  "categories": {
+    "title": "Categories",
+    "create": "Create Category",
+    "new": "New Category",
+    "name": "Name",
+    "description": "Description",
+    "words": "words",
+    "play": "Play",
+    "notFound": "No categories found"
+  },
+  "game": {
+    "title": "Game",
+    "setup": "Game Setup",
+    "players": "Players",
+    "addPlayer": "Add Player",
+    "rounds": "Rounds",
+    "newRound": "New Round",
+    "start": "Start Game",
+    "impostor": "Impostor",
+    "word": "Word"
+  },
+  "messages": {
+    "sessionExpired": "Your session has expired",
+    "error": "An error occurred",
+    "success": "Operation completed successfully",
+    "pleaseLogin": "Please login"
+  }
+}

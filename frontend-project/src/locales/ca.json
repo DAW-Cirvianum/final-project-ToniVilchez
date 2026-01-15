@@ -1,0 +1,70 @@
+{
+  "app": {
+    "title": "Impostor Game",
+    "subtitle": "Juga a endevinar qui és l'impostor"
+  },
+  "nav": {
+    "home": "Inici",
+    "login": "Iniciar Sessió",
+    "register": "Registrar-se",
+    "logout": "Tancar Sessió",
+    "categories": "Categories",
+    "games": "Jocs"
+  },
+  "auth": {
+    "login": "Iniciar Sessió",
+    "register": "Registrar-se",
+    "email": "Email",
+    "username": "Nom d'Usuari",
+    "password": "Contrasenya",
+    "confirmPassword": "Confirmar Contrasenya",
+    "rememberMe": "Recorda'm",
+    "forgotPassword": "Vas oblidar la contrasenya?",
+    "noAccount": "No tens compte?",
+    "haveAccount": "Ja tens compte?",
+    "language": "Idioma"
+  },
+  "common": {
+    "loading": "Carregant...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Afegir",
+    "back": "Enrere",
+    "search": "Cercar",
+    "filter": "Filtrar",
+    "sortBy": "Ordenar per",
+    "success": "Èxit",
+    "error": "Error",
+    "warning": "Avís",
+    "info": "Informació"
+  },
+  "categories": {
+    "title": "Categories",
+    "create": "Crear Categoria",
+    "new": "Nova Categoria",
+    "name": "Nom",
+    "description": "Descripció",
+    "words": "paraules",
+    "play": "Jugar",
+    "notFound": "No s'han trobat categories"
+  },
+  "game": {
+    "title": "Joc",
+    "setup": "Configurar Joc",
+    "players": "Jugadors",
+    "addPlayer": "Afegir Jugador",
+    "rounds": "Rondes",
+    "newRound": "Nova Ronda",
+    "start": "Començar Joc",
+    "impostor": "Impostor",
+    "word": "Paraula"
+  },
+  "messages": {
+    "sessionExpired": "La teva sessió ha expirat",
+    "error": "Ha ocorregut un error",
+    "success": "Operació completada amb èxit",
+    "pleaseLogin": "Si us plau, inicia sessió"
+  }
+}

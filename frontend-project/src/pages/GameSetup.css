@@ -1,0 +1,243 @@
+/* Estilos para GameSetup */
+.game-setup-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.game-setup-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 500px;
+  padding: 40px;
+}
+
+.game-setup-title {
+  margin: 0 0 30px;
+  font-size: 2rem;
+  color: #1f2937;
+  text-align: center;
+}
+
+.game-setup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.95rem;
+}
+
+.form-label-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.player-count {
+  font-size: 0.85rem;
+  color: #667eea;
+  font-weight: 600;
+}
+
+.form-input {
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-input--error {
+  border-color: #ef4444;
+}
+
+.form-error {
+  color: #ef4444;
+  font-size: 0.85rem;
+}
+
+/* Lista de jugadores con drag-drop */
+.players-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 15px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 2px dashed #e5e7eb;
+  transition: all 0.2s;
+}
+
+.players-list:hover {
+  border-color: #667eea;
+  background-color: #f1f3ff;
+}
+
+/* Ítem de jugador */
+.player-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s;
+  cursor: grab;
+}
+
+.player-item:active {
+  cursor: grabbing;
+}
+
+.player-item--dragging {
+  opacity: 0.5;
+  background-color: #667eea;
+  border-color: #667eea;
+}
+
+.player-item__drag-handle {
+  color: #d1d5db;
+  font-weight: bold;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.player-item__input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.player-item__input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.player-item__input--error {
+  border-color: #ef4444;
+  background-color: #fee;
+}
+
+.player-item__remove {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.player-item__remove:hover {
+  color: #dc2626;
+  transform: scale(1.2);
+}
+
+/* Botones */
+.btn {
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1rem;
+}
+
+.btn--primary {
+  background-color: #667eea;
+  color: white;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background-color: #5568d3;
+  box-shadow: 0 10px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn--secondary {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background-color: #d1d5db;
+}
+
+.btn--large {
+  padding: 14px;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Info dragdrop */
+.drag-drop-info {
+  padding: 12px;
+  background-color: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #92400e;
+  margin: 10px 0;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .game-setup-card {
+    padding: 30px 20px;
+  }
+
+  .game-setup-title {
+    font-size: 1.5rem;
+  }
+
+  .player-item {
+    flex-wrap: wrap;
+  }
+
+  .player-item__input {
+    flex: 1 1 100%;
+  }
+
+  .btn {
+    padding: 12px 16px;
+    font-size: 0.95rem;
+  }
+}

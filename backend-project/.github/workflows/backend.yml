@@ -1,0 +1,47 @@
+name: Deploy Laravel to Azure
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "**"
+      - "!frontend/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: "8.2"
+        extensions: mbstring, pdo_mysql, bcmath, intl
+        coverage: none
+
+    - name: Install Composer dependencies
+      run: |
+        composer install --no-dev --optimize-autoloader
+
+    - name: Create .env file
+      run: |
+        echo "APP_KEY=" >> .env
+        echo "APP_ENV=production" >> .env
+
+    - name: Generate key
+      run: php artisan key:generate --force
+
+    - name: Config cache
+      run: php artisan config:cache
+
+    - name: Route cache
+      run: php artisan route:cache
+
+    - name: Deploy to Azure WebApp
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+        package: .
