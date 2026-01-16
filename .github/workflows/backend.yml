@@ -9,55 +9,30 @@ on:
       - ".github/workflows/backend.yml"
   workflow_dispatch:
 
-env:
-  AZURE_WEBAPP_NAME: 'backend-toni'
-  WORKING_DIRECTORY: './backend-project'
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
-      - name: Debug - List files
-        run: |
-          echo "Estructura del repositorio:"
-          ls -la
-          echo "Contenido de backend-project:"
-          ls -la backend-project/
-      
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           extensions: mbstring, pdo_mysql, bcmath, intl, fileinfo, openssl, tokenizer, xml
-          coverage: none
-      
-      - name: Cache Composer dependencies
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.WORKING_DIRECTORY }}/vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-php-
-      
+
       - name: Install dependencies
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: composer install --no-dev --optimize-autoloader --no-interaction
-      
-      - name: Setup environment
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: backend-project
         run: |
+          composer install --no-dev --optimize-autoloader
           cp .env.example .env || true
           php artisan key:generate --force
-      
+
       - name: Deploy to Azure WebApp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          app-name: backend-toni
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          package: ${{ env.WORKING_DIRECTORY }}/.
+          package: backend-project/.
