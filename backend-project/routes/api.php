@@ -10,9 +10,6 @@ use App\Http\Controllers\WordController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PasswordResetController;
 
-// =============================================
-// MANEJO DE PREFLIGHT CORS (OPTIONS REQUESTS)
-// =============================================
 Route::match(['options'], '/{any}', function () {
     return response('', 200)
         ->header('Access-Control-Allow-Origin', 'https://icy-pebble-09c50c703.4.azurestaticapps.net')
