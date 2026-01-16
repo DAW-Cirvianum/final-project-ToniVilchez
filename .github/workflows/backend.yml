@@ -9,12 +9,15 @@ on:
       - ".github/workflows/backend.yml"
   workflow_dispatch:
 
+env:
+  AZURE_WEBAPP_NAME: 'backend-toni-php'
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup PHP
@@ -29,14 +32,14 @@ jobs:
           cp .env.example .env || true
           php artisan key:generate --force
 
-      - name: Create ZIP for deploy
+      - name: Create ZIP for deployment
         run: |
           cd backend-project
-          zip -r ../backend.zip .
+          zip -r ../app.zip .
 
-      - name: Deploy to Azure WebApp
+      - name: Deploy to Azure
         uses: azure/webapps-deploy@v3
         with:
-          app-name: backend-toni-php
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          package: backend.zip
+          package: app.zip
