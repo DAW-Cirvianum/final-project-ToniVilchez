@@ -1,17 +1,14 @@
+// src/services/api.js
 import axios from "axios";
 
-const isProduction = window.location.hostname.includes('azurestaticapps.net');
-
 const api = axios.create({
-  baseURL: isProduction 
-    ? "https://backend-toni-bvcxdnaegrgkgkbt.westeurope-01.azurewebsites.net/api"
-    : "http://localhost:8000/api",
+  baseURL: "http://localhost/api", // Assegura't que és http://localhost
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
   },
-  withCredentials: true,
+  withCredentials: true, // IMPORTANT per cookies CORS
 });
 
 api.interceptors.request.use(config => {
@@ -24,13 +21,14 @@ api.interceptors.request.use(config => {
   return Promise.reject(error);
 });
 
+// Interceptor per CORS errors
 api.interceptors.response.use(
   response => response,
   error => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = '/login';
+    if (error.code === 'ERR_NETWORK') {
+      console.error('CORS/Network error. Check your backend CORS configuration.');
+      console.error('Request URL:', error.config?.url);
+      console.error('Origin:', window.location.origin);
     }
     return Promise.reject(error);
   }

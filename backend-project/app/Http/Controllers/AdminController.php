@@ -3,136 +3,168 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-
 class AdminController extends Controller
 {
-    public function dashboard()
-    {
-        $totalUsers = User::count();
-        $adminUsers = User::where('role', 'admin')->count();
-        $userUsers = User::where('role', 'user')->count();
-        $activeUsers = User::where('is_active', true)->count();
-        $inactiveUsers = User::where('is_active', false)->count();
+    
+    public function getUsers()
+{
+    $users = User::select('id', 'name', 'email', 'role', 'language', 'created_at')
+                ->orderBy('created_at', 'desc')
+                ->get();
+    
+    return response()->json([
+        'success' => true,
+        'data' => $users
+    ]);
+}
 
-        return view('admin.dashboard', [
-            'totalUsers' => $totalUsers,
-            'adminUsers' => $adminUsers,
-            'userUsers' => $userUsers,
-            'activeUsers' => $activeUsers,
-            'inactiveUsers' => $inactiveUsers,
+    public function updateUserRole(Request $request, $userId)
+    {
+        $request->validate([
+            'role' => 'required|in:user,admin'
+        ]);
+
+        $user = User::findOrFail($userId);
+        
+        if ($user->id === auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No puedes cambiar tu propio rol'
+            ], 403);
+        }
+
+        $user->update(['role' => $request->role]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Rol actualizado correctamente',
+            'data' => $user
         ]);
     }
 
-    public function listUsers(Request $request)
+    public function toggleUserStatus($userId)
     {
-        $query = User::query();
-
-        if ($request->has('role') && $request->role) {
-            $query->where('role', $request->role);
+        $user = User::findOrFail($userId);
+        
+        if ($user->id === auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No puedes desactivarte a ti mismo'
+            ], 403);
         }
 
-        if ($request->has('active') && $request->active !== '') {
-            $query->where('is_active', (bool)$request->active);
-        }
+        $user->update(['is_active' => !$user->is_active]);
 
-        if ($request->has('search') && $request->search) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
-            });
-        }
-
-        $sortBy = $request->get('sort', 'created_at');
-        $sortOrder = $request->get('order', 'desc');
-        $query->orderBy($sortBy, $sortOrder);
-
-        $users = $query->paginate(15);
-
-        return view('admin.users.index', [
-            'users' => $users,
-            'filters' => $request->all(),
+        return response()->json([
+            'success' => true,
+            'message' => 'Estado actualizado correctamente',
+            'data' => [
+                'id' => $user->id,
+                'is_active' => $user->is_active
+            ]
         ]);
     }
 
-    public function showUser(User $user)
+    public function deleteUser($userId)
     {
-        return view('admin.users.show', [
-            'user' => $user,
-        ]);
-    }
-
-    public function updateUser(Request $request, User $user)
-    {
-        $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
-            'password' => 'sometimes|nullable|min:6',
-            'language' => 'sometimes|string|max:10',
-        ]);
-
-        if (isset($validated['password']) && $validated['password']) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            unset($validated['password']);
-        }
-
-        $user->update($validated);
-
-        return back()->with('message', 'Usuario actualizado correctamente');
-    }
-
-    public function updateRole(Request $request, User $user)
-    {
-        $validated = $request->validate([
-            'role' => 'required|in:user,admin',
-        ]);
-
-        if ($user->role === 'admin' && $validated['role'] === 'user') {
-            $adminCount = User::where('role', 'admin')->count();
-            if ($adminCount <= 1) {
-                return back()->with('error', 'No puedes degradar al último admin');
-            }
-        }
-
-        $user->update($validated);
-
-        return back()->with('message', 'Rol actualizado correctamente');
-    }
-
-    public function toggleActive(Request $request, User $user)
-    {
-        if ($user->role === 'admin' && $user->is_active) {
-            $activeAdmins = User::where('role', 'admin')
-                                ->where('is_active', true)
-                                ->count();
-            if ($activeAdmins <= 1) {
-                return back()->with('error', 'No puedes desactivar al último admin activo');
-            }
-        }
-
-        $user->update([
-            'is_active' => !$user->is_active,
-        ]);
-
-        $status = $user->is_active ? 'activado' : 'desactivado';
-        return back()->with('message', "Usuario {$status} correctamente");
-    }
-
-    public function deleteUser(User $user)
-    {
-        if ($user->role === 'admin') {
-            $adminCount = User::where('role', 'admin')->count();
-            if ($adminCount <= 1) {
-                return back()->with('error', 'No puedes eliminar al último admin');
-            }
+        $user = User::findOrFail($userId);
+        
+        if ($user->id === auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No puedes eliminarte a ti mismo'
+            ], 403);
         }
 
         $user->delete();
 
-        return back()->with('message', 'Usuario eliminado correctamente');
+        return response()->json([
+            'success' => true,
+            'message' => 'Usuario eliminado correctamente'
+        ]);
+    }
+
+    
+    public function createCategory(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name',
+            'color' => 'nullable|string|max:7',
+            'icon' => 'nullable|string|max:50'
+        ]);
+
+        $category = Category::create([
+            'name' => $request->name,
+            'color' => $request->color ?? '#3B82F6',
+            'icon' => $request->icon ?? 'fa-folder',
+            'user_id' => auth()->id()
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Categoría creada correctamente',
+            'data' => $category
+        ]);
+    }
+
+    public function updateCategory(Request $request, $categoryId)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name,' . $categoryId,
+            'color' => 'nullable|string|max:7',
+            'icon' => 'nullable|string|max:50'
+        ]);
+
+        $category = Category::findOrFail($categoryId);
+        $category->update($request->only(['name', 'color', 'icon']));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Categoría actualizada correctamente',
+            'data' => $category
+        ]);
+    }
+
+    public function deleteCategory($categoryId)
+    {
+        $category = Category::findOrFail($categoryId);
+        
+        if ($category->is_default) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se puede eliminar una categoría predeterminada'
+            ], 400);
+        }
+
+        $category->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Categoría eliminada correctamente'
+        ]);
+    }
+
+    public function toggleDefaultCategory($categoryId)
+    {
+        $category = Category::findOrFail($categoryId);
+        
+        if ($category->is_default) {
+            $category->update(['is_default' => false]);
+            $message = 'Categoría quitada como predeterminada';
+        } else {
+            Category::where('is_default', true)->update(['is_default' => false]);
+            $category->update(['is_default' => true]);
+            $message = 'Categoría marcada como predeterminada';
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'data' => $category
+        ]);
     }
 }

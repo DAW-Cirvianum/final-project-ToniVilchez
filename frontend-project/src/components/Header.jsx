@@ -1,31 +1,54 @@
-import { useContext } from 'react';
-import { AppContext } from '../context/AppContext';
-import { useNavigate, NavLink, useLocation } from 'react-router-dom';
-import { LogOut, Moon, Sun, Grid, Gamepad2 } from 'lucide-react';
+// src/components/Header.jsx (MODIFICADO)
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
+import { useNavigate, NavLink, useLocation } from "react-router-dom";
+import { LogOut, Moon, Sun, Grid, Gamepad2, Shield } from "lucide-react";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export function Header() {
   const { user, logout, theme, toggleTheme } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Rutes on NO volem mostrar el Header
-  const hiddenRoutes = ['/login', '/register', '/signup', '/forgot-password', '/'];
+  const hiddenRoutes = [
+    "/login",
+    "/register",
+    "/signup",
+    "/forgot-password",
+    "/",
+  ];
   const shouldHide = hiddenRoutes.includes(location.pathname);
 
-  // Si estem a una ruta oculta, no renderitzem res
   if (shouldHide) {
     return null;
   }
 
   const handleLogout = async () => {
     await logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   const navItems = [
-    { path: '/categories', label: 'Categorías', icon: <Grid className="w-4 h-4" /> },
-    { path: "/games", label: "Historial", icon: <Gamepad2 className="w-4 h-4" /> },
+    {
+      path: "/categories",
+      label: "Categorías",
+      icon: <Grid className="w-4 h-4" />,
+    },
+    {
+      path: "/games",
+      label: "Historial",
+      icon: <Gamepad2 className="w-4 h-4" />,
+    },
   ];
+
+  // Añadir opción de admin si el usuario es admin
+  if (user?.role === "admin") {
+    navItems.push({
+      path: "/admin/users",
+      label: "Admin",
+      icon: <Shield className="w-4 h-4" />,
+    });
+  }
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-lg bg-white/5 border-b border-white/10">
@@ -34,7 +57,7 @@ export function Header() {
           {/* Logo */}
           <div className="flex items-center space-x-3">
             <button
-              onClick={() => navigate('/')}
+              onClick={() => navigate("/categories")}
               className="flex items-center space-x-2 text-white hover:text-primary-400 transition-colors"
             >
               <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
@@ -55,8 +78,8 @@ export function Header() {
                 className={({ isActive }) =>
                   `flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                     isActive
-                      ? 'bg-white/10 text-white'
-                      : 'text-gray-300 hover:text-white hover:bg-white/5'
+                      ? "bg-white/10 text-white"
+                      : "text-gray-300 hover:text-white hover:bg-white/5"
                   }`
                 }
               >
@@ -68,21 +91,29 @@ export function Header() {
 
           {/* Right section */}
           <div className="flex items-center space-x-3">
+            <LanguageSwitcher />
+
+            <div className="h-6 w-px bg-white/10"></div>
+
             {/* User menu */}
             {user ? (
               <div className="flex items-center space-x-3">
                 <div className="hidden md:flex items-center space-x-2">
                   <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                    {user.name?.charAt(0) || user.email?.charAt(0) || 'U'}
+                    {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
                   </div>
                   <button
-                    onClick={() => navigate('/profile')}
+                    onClick={() => navigate("/profile")}
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm font-medium text-white transition-all"
                   >
                     <div className="text-sm">
-                      <p className="text-white font-medium">{user.name || user.email}</p>
+                      <p className="text-white font-medium">
+                        {user.name || user.email}
+                      </p>
                       {user.role === "admin" && (
-                        <span className="text-xs bg-yellow-500 text-yellow-950 px-2 py-0.5 rounded-full font-bold">ADMIN</span>
+                        <span className="text-xs bg-yellow-500 text-yellow-950 px-2 py-0.5 rounded-full font-bold">
+                          ADMIN
+                        </span>
                       )}
                     </div>
                   </button>
@@ -97,7 +128,7 @@ export function Header() {
               </div>
             ) : (
               <button
-                onClick={() => navigate('/login')}
+                onClick={() => navigate("/login")}
                 className="px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-lg font-medium transition-all shadow-lg hover:shadow-primary-500/25"
               >
                 Iniciar sesión

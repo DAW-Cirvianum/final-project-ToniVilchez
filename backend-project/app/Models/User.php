@@ -13,27 +13,48 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $fillable = [
+protected $fillable = [
         'name',
         'email',
         'password',
         'language',
+        'avatar_path',
+        'avatar_url',
         'role',
-        'is_active',
+        'is_active', // AFEGEIX AIXÒ
     ];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'is_active' => 'boolean', // AFEGEIX AIXÒ
+    ];
+
+    /**
+     * Valors per defecte pels atributs
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'language' => 'ca',
+        'role' => 'user',
+        'is_active' => true, // AFEGEIX AIXÒ (opcional)
+    ];
 
     public function categories()
     {

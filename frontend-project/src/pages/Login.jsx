@@ -179,11 +179,6 @@ export default function Login() {
               Regístrate aquí
             </Link>
           </p>
-          <p className="text-gray-400 text-sm">
-            <Link to="/forgot-password" className="font-semibold text-primary-400 hover:text-primary-300 transition-colors">
-              ¿Olvidaste tu contraseña?
-            </Link>
-          </p>
         </div>
       </div>
     </div>

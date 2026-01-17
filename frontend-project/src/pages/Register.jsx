@@ -312,30 +312,6 @@ export default function Register() {
               )}
             </div>
 
-            {/* Idioma */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-300">
-                Idioma
-              </label>
-              <div className="relative">
-                <select
-                  id="language"
-                  name="language"
-                  value={formData.language}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white/5 border-2 border-white/10 rounded-xl text-white focus:outline-none focus:border-primary-500 transition-colors appearance-none"
-                  disabled={isLoading}
-                >
-                  <option value="ca">Català</option>
-                  <option value="es">Español</option>
-                  <option value="en">English</option>
-                </select>
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                  <div className="w-5 h-5 text-gray-400">▼</div>
-                </div>
-              </div>
-            </div>
-
             {/* Aceptar Términos */}
             <div className="space-y-2">
               <label className="flex items-center space-x-3 cursor-pointer group">
