@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useApp } from '../hooks/useApp';
+import { useTranslation } from 'react-i18next';
 import { categoryService, adminService } from '../api/services';
 import { 
   Edit2, 
@@ -20,6 +21,7 @@ export function AdminCategoryActions({
   onAddWord 
 }) {
   const { user, addNotification } = useApp();
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(category.name);
   const [loading, setLoading] = useState({
@@ -41,28 +43,28 @@ export function AdminCategoryActions({
     setLoading(prev => ({ ...prev, edit: true }));
     try {
       await categoryService.update(category.id, { name: editName });
-      addNotification('Categoría actualizada correctamente', 'success');
+      addNotification(t('categories.messages.updatedSuccess'), 'success');
       onUpdate?.();
       setIsEditing(false);
     } catch (error) {
-      addNotification('Error al actualizar categoría', 'error');
+      addNotification(t('categories.messages.updatedError'), 'error');
     } finally {
       setLoading(prev => ({ ...prev, edit: false }));
     }
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('¿Estás seguro de eliminar esta categoría? Se eliminarán todas sus palabras.')) {
+    if (!window.confirm(t('categories.deleteModal.message'))) {
       return;
     }
 
     setLoading(prev => ({ ...prev, delete: true }));
     try {
       await categoryService.delete(category.id);
-      addNotification('Categoría eliminada correctamente', 'success');
+      addNotification(t('categories.messages.deletedSuccess'), 'success');
       onDelete?.();
     } catch (error) {
-      addNotification('Error al eliminar categoría', 'error');
+      addNotification(t('categories.messages.updatedError'), 'error');
     } finally {
       setLoading(prev => ({ ...prev, delete: false }));
     }
@@ -75,7 +77,7 @@ export function AdminCategoryActions({
       addNotification(response.data.message, 'success');
       onToggleDefault?.();
     } catch (error) {
-      addNotification('Error al cambiar estado', 'error');
+      addNotification(t('categories.messages.setDefaultError'), 'error');
     } finally {
       setLoading(prev => ({ ...prev, toggle: false }));
     }
@@ -83,7 +85,6 @@ export function AdminCategoryActions({
 
   return (
     <div className="flex items-center gap-2">
-      {/* Toggle predeterminada */}
       <button
         onClick={handleToggleDefault}
         disabled={loading.toggle}
@@ -92,7 +93,10 @@ export function AdminCategoryActions({
             ? 'bg-yellow-500/20 text-yellow-500 hover:bg-yellow-500/30' 
             : 'bg-gray-800/50 text-gray-400 hover:bg-gray-800 hover:text-gray-300'
         }`}
-        title={category.is_default ? 'Quitar predeterminada' : 'Marcar como predeterminada'}
+        title={category.is_default 
+          ? t('categories.setDefaultTitle') 
+          : t('categories.setDefaultTitle')
+        }
       >
         {loading.toggle ? (
           <Loader2 className="w-4 h-4 animate-spin" />
@@ -103,16 +107,14 @@ export function AdminCategoryActions({
         )}
       </button>
 
-      {/* Añadir palabra */}
       <button
         onClick={() => onAddWord?.(category)}
         className="p-2 rounded-lg bg-primary-500/20 text-primary-400 hover:bg-primary-500/30 hover:text-primary-300 transition-all"
-        title="Añadir palabra"
+        title={t('categories.addWordTitle')}
       >
         <Plus className="w-4 h-4" />
       </button>
 
-      {/* Editar nombre */}
       {isEditing ? (
         <div className="flex items-center gap-1 bg-gray-800 rounded-lg px-2">
           <input
@@ -144,18 +146,17 @@ export function AdminCategoryActions({
         <button
           onClick={() => setIsEditing(true)}
           className="p-2 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 hover:text-blue-300 transition-all"
-          title="Editar nombre"
+          title={t('common.edit')}
         >
           <Edit2 className="w-4 h-4" />
         </button>
       )}
 
-      {/* Eliminar */}
       <button
         onClick={handleDelete}
         disabled={loading.delete}
         className="p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 hover:text-red-300 transition-all disabled:opacity-50"
-        title="Eliminar categoría"
+        title={t('categories.deleteTitle')}
       >
         {loading.delete ? (
           <Loader2 className="w-4 h-4 animate-spin" />

@@ -1,6 +1,9 @@
 import { X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export function Modal({ isOpen, title, children, onClose, actions }) {
+  const { t } = useTranslation();
+
   if (!isOpen) return null;
 
   return (
@@ -12,24 +15,21 @@ export function Modal({ isOpen, title, children, onClose, actions }) {
         className="relative w-full max-w-md bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl shadow-2xl animate-scale-in"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <h2 className="text-xl font-bold text-white">{title}</h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-            aria-label="Cerrar"
+            aria-label={t('common.close')}
           >
             <X className="w-5 h-5 text-gray-400" />
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6">
           {children}
         </div>
 
-        {/* Footer */}
         {actions && (
           <div className="flex items-center justify-end gap-3 p-6 border-t border-white/10">
             {actions}

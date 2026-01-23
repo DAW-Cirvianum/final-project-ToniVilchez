@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, Play, Shield, Lock, Users, RefreshCw, Home, EyeOff, Key, User, Sword } from 'lucide-react';
 
 export default function CreateRoundModal({ 
@@ -11,6 +12,7 @@ export default function CreateRoundModal({
   gameId,
   navigate 
 }) {
+  const { t } = useTranslation();
   const [selectedWord, setSelectedWord] = useState(null);
   const [selectedImpostor, setSelectedImpostor] = useState(null);
   const [startingPlayer, setStartingPlayer] = useState(null);
@@ -83,8 +85,8 @@ export default function CreateRoundModal({
       <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl border border-slate-700 w-full max-w-md overflow-hidden shadow-2xl animate-scale-in">
         <div className="flex items-center justify-between p-6 border-b border-slate-700">
           <div>
-            <h3 className="text-xl font-bold text-white">Crear Nueva Ronda</h3>
-            <p className="text-gray-400 text-sm">Configuración secreta</p>
+            <h3 className="text-xl font-bold text-white">{t('createRoundModal.title')}</h3>
+            <p className="text-gray-400 text-sm">{t('common.secretSetup', 'Configuración secreta')}</p>
           </div>
           <button 
             onClick={onClose} 
@@ -101,8 +103,8 @@ export default function CreateRoundModal({
                 <Lock className="w-6 h-6 text-primary-300" />
               </div>
               <div className="text-center">
-                <h4 className="text-lg font-semibold text-white">Información Secreta</h4>
-                <p className="text-gray-400 text-sm">Los jugadores verán su rol al hacer clic</p>
+                <h4 className="text-lg font-semibold text-white">{t('common.secretInformation', 'Información Secreta')}</h4>
+                <p className="text-gray-400 text-sm">{t('createRoundModal.playersWillSeeRole', 'Los jugadores verán su rol al hacer clic')}</p>
               </div>
             </div>
             
@@ -111,7 +113,7 @@ export default function CreateRoundModal({
                 <div className="p-2 bg-blue-500/10 rounded-lg inline-block mb-2">
                   <Key className="w-5 h-5 text-blue-300" />
                 </div>
-                <p className="text-gray-400 text-sm mb-1">Palabra</p>
+                <p className="text-gray-400 text-sm mb-1">{t('game.word')}</p>
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <div className="w-4 h-4 bg-blue-500/30 rounded-full"></div>
                   <div className="w-4 h-4 bg-blue-500/30 rounded-full"></div>
@@ -119,7 +121,7 @@ export default function CreateRoundModal({
                   <EyeOff className="w-4 h-4 text-blue-300" />
                 </div>
                 <div className="text-xs text-gray-500">
-                  {selectedWord ? 'Seleccionada' : 'No seleccionada'}
+                  {selectedWord ? t('common.selected', 'Seleccionada') : t('common.notSelected', 'No seleccionada')}
                 </div>
               </div>
               
@@ -127,13 +129,13 @@ export default function CreateRoundModal({
                 <div className="p-2 bg-rose-500/10 rounded-lg inline-block mb-2">
                   <Sword className="w-5 h-5 text-rose-300" />
                 </div>
-                <p className="text-gray-400 text-sm mb-1">Impostor</p>
+                <p className="text-gray-400 text-sm mb-1">{t('game.impostor')}</p>
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <User className="w-5 h-5 text-rose-300/50" />
                   <EyeOff className="w-4 h-4 text-rose-300" />
                 </div>
                 <div className="text-xs text-gray-500">
-                  {selectedImpostor ? 'Seleccionado' : 'No seleccionado'}
+                  {selectedImpostor ? t('common.selected', 'Seleccionado') : t('common.notSelected', 'No seleccionado')}
                 </div>
               </div>
               
@@ -141,13 +143,13 @@ export default function CreateRoundModal({
                 <div className="p-2 bg-yellow-500/10 rounded-lg inline-block mb-2">
                   <Users className="w-5 h-5 text-yellow-300" />
                 </div>
-                <p className="text-gray-400 text-sm mb-1">Comienza</p>
+                <p className="text-gray-400 text-sm mb-1">{t('game.startingPlayer', 'Comienza')}</p>
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <User className="w-5 h-5 text-yellow-300/50" />
                   <EyeOff className="w-4 h-4 text-yellow-300" />
                 </div>
                 <div className="text-xs text-gray-500">
-                  {startingPlayer ? 'Seleccionado' : 'No seleccionado'}
+                  {startingPlayer ? t('common.selected', 'Seleccionado') : t('common.notSelected', 'No seleccionado')}
                 </div>
               </div>
             </div>
@@ -159,19 +161,19 @@ export default function CreateRoundModal({
                   <p className="text-sm text-gray-300">
                     {selectedWord && selectedImpostor && startingPlayer ? (
                       <>
-                        Se han seleccionado aleatoriamente: 
-                        <span className="font-bold text-primary-300"> 1 palabra</span>, 
-                        <span className="font-bold text-rose-300"> 1 impostor</span> y 
-                        <span className="font-bold text-yellow-300"> 1 jugador inicial</span>.
+                        {t('createRoundModal.randomlySelected', 'Se han seleccionado aleatoriamente:')} 
+                        <span className="font-bold text-primary-300"> 1 {t('common.word').toLowerCase()}</span>, 
+                        <span className="font-bold text-rose-300"> 1 {t('game.impostor').toLowerCase()}</span> {t('common.and')}
+                        <span className="font-bold text-yellow-300"> 1 {t('game.startingPlayer').toLowerCase()}</span>.
                       </>
                     ) : (
                       <>
-                        <span className="font-bold text-yellow-300">Haz clic en "Cambiar Aleatorio"</span> para generar una nueva configuración secreta.
+                        <span className="font-bold text-yellow-300">{t('createRoundModal.clickRandomize', 'Haz clic en "Cambiar Aleatorio"')}</span> {t('createRoundModal.toGenerateNew', 'para generar una nueva configuración secreta.')}
                       </>
                     )}
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
-                    Los jugadores descubrirán su rol al hacer clic en su nombre.
+                    {t('createRoundModal.playersDiscoverRole', 'Los jugadores descubrirán su rol al hacer clic en su nombre.')}
                   </p>
                 </div>
               </div>
@@ -181,10 +183,10 @@ export default function CreateRoundModal({
               <div className="bg-rose-500/10 border border-rose-500/20 rounded-xl p-3 mt-4">
                 <p className="text-sm text-rose-300 text-center">
                   {words.length === 0 && players.length === 0 
-                    ? 'No hay palabras ni jugadores disponibles'
+                    ? t('createRoundModal.noWordsOrPlayers', 'No hay palabras ni jugadores disponibles')
                     : words.length === 0 
-                    ? 'No hay palabras disponibles para esta categoría'
-                    : 'No hay jugadores en el juego'}
+                    ? t('game.messages.noWordsInCategory', 'No hay palabras disponibles para esta categoría')
+                    : t('game.messages.noPlayers', 'No hay jugadores en el juego')}
                 </p>
               </div>
             )}
@@ -201,12 +203,12 @@ export default function CreateRoundModal({
                 {isRandomizing ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Seleccionando...
+                    {t('common.selecting', 'Seleccionando...')}
                   </>
                 ) : (
                   <>
                     <RefreshCw className="w-4 h-4" />
-                    Cambiar Aleatorio
+                    {t('createRoundModal.changeRandom', 'Cambiar Aleatorio')}
                   </>
                 )}
               </button>
@@ -223,12 +225,12 @@ export default function CreateRoundModal({
                 {loading ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Creando...
+                    {t('createRoundModal.creating', 'Creando...')}
                   </>
                 ) : (
                   <>
                     <Play className="w-5 h-5" />
-                    Iniciar Ronda
+                    {t('createRoundModal.startRound', 'Iniciar Ronda')}
                   </>
                 )}
               </button>
@@ -241,7 +243,7 @@ export default function CreateRoundModal({
                 className="flex-1 px-4 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <Home className="w-4 h-4" />
-                Volver al Menú
+                {t('common.backToMenu', 'Volver al Menú')}
               </button>
               
               <button
@@ -250,7 +252,7 @@ export default function CreateRoundModal({
                 className="flex-1 px-4 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <X className="w-4 h-4" />
-                Cancelar
+                {t('common.cancel')}
               </button>
             </div>
           </div>

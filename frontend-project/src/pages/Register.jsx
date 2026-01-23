@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../hooks/useApp';
 import { authService } from '../api/services';
-import { Eye, EyeOff, User, Mail, Lock, Check, Sun, Moon } from 'lucide-react';
+import { Eye, EyeOff, User, Mail, Lock, Check } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function Register() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const { login, addNotification } = useApp();
+  const { addNotification } = useApp();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -37,33 +39,33 @@ export default function Register() {
     const newErrors = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Nombre es requerido';
+      newErrors.name = t('auth.errors.nameRequired', 'Nombre es requerido');
     } else if (formData.name.length < 3) {
-      newErrors.name = 'Nombre debe tener al menos 3 caracteres';
+      newErrors.name = t('auth.errors.nameMinLength', 'Nombre debe tener al menos 3 caracteres');
     } else if (formData.name.length > 50) {
-      newErrors.name = 'Nombre no puede exceder 50 caracteres';
+      newErrors.name = t('auth.errors.nameMaxLength', 'Nombre no puede exceder 50 caracteres');
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email es requerido';
+      newErrors.email = t('auth.errors.emailRequired', 'Email es requerido');
     } else if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      newErrors.email = 'Email no válido';
+      newErrors.email = t('auth.errors.emailInvalid', 'Email no válido');
     }
 
     if (!formData.password) {
-      newErrors.password = 'Contraseña es requerida';
+      newErrors.password = t('auth.errors.passwordRequired', 'Contraseña es requerida');
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Contraseña debe tener al menos 6 caracteres';
+      newErrors.password = t('auth.errors.passwordMinLength', 'Contraseña debe tener al menos 6 caracteres');
     }
 
     if (!formData.passwordConfirm) {
-      newErrors.passwordConfirm = 'Confirma la contraseña';
+      newErrors.passwordConfirm = t('auth.errors.confirmPasswordRequired', 'Confirma la contraseña');
     } else if (formData.password !== formData.passwordConfirm) {
-      newErrors.passwordConfirm = 'Las contraseñas no coinciden';
+      newErrors.passwordConfirm = t('auth.errors.passwordsDontMatch', 'Las contraseñas no coinciden');
     }
 
     if (!formData.acceptTerms) {
-      newErrors.acceptTerms = 'Debes aceptar los términos de servicio';
+      newErrors.acceptTerms = t('auth.errors.acceptTerms', 'Debes aceptar los términos de servicio');
     }
 
     return newErrors;
@@ -93,26 +95,33 @@ export default function Register() {
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      addNotification('Por favor, completa el formulario correctamente', 'error');
+      addNotification(t('auth.messages.completeForm', 'Por favor, completa el formulario correctamente'), 'error');
       return;
     }
 
     setIsLoading(true);
     try {
-      const response = await authService.register({
+      await authService.register({
         name: formData.name,
         email: formData.email,
         password: formData.password,
         language: formData.language,
       });
 
-      const { user, token } = response.data;
-      login(user, token);
-      addNotification('¡Cuenta creada exitosamente!', 'success');
+      addNotification(
+        t('auth.messages.registerSuccessVerify', '¡Cuenta creada! Revisa tu correo para verificarla.'), 
+        'success'
+      );
+      
+      navigate('/login', { 
+        state: { 
+          message: 'checkEmail',
+          email: formData.email 
+        } 
+      });
 
-      navigate('/categories');
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Error en el registro';
+      const errorMessage = error.response?.data?.message || t('auth.messages.registerError', 'Error en el registro');
       addNotification(errorMessage, 'error');
 
       if (error.response?.data?.errors) {
@@ -124,32 +133,39 @@ export default function Register() {
   };
 
   const getPasswordStrengthText = () => {
-    const texts = ['Muy débil', 'Débil', 'Normal', 'Fuerte', 'Muy fuerte'];
+    const texts = [
+      t('auth.passwordStrength.veryWeak', 'Muy débil'),
+      t('auth.passwordStrength.weak', 'Débil'),
+      t('auth.passwordStrength.normal', 'Normal'),
+      t('auth.passwordStrength.strong', 'Fuerte'),
+      t('auth.passwordStrength.veryStrong', 'Muy fuerte')
+    ];
     const colors = ['text-rose-400', 'text-orange-400', 'text-yellow-400', 'text-lime-400', 'text-emerald-400'];
-    return { text: texts[passwordStrength - 1], color: colors[passwordStrength - 1] };
+    return { text: texts[passwordStrength - 1] || '', color: colors[passwordStrength - 1] || '' };
   };
 
   const strengthColors = ['bg-rose-500', 'bg-orange-500', 'bg-yellow-500', 'bg-lime-500', 'bg-emerald-500'];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 flex flex-col items-center justify-center px-4 py-8">
-      {/* Main Container */}
       <div className="w-full max-w-md">
-        {/* Logo & Title */}
         <div className="text-center mb-10">
           <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
             <span className="text-white font-black text-3xl">I</span>
           </div>
-          <h1 className="text-4xl font-bold text-white mb-3">Crear Cuenta</h1>
-          <p className="text-gray-400 text-lg">Únete a la comunidad</p>
+          <h1 className="text-4xl font-bold text-white mb-3">
+            {t('auth.register', 'Crear Cuenta')}
+          </h1>
+          <p className="text-gray-400 text-lg">
+            {t('auth.registerSubtitle', 'Únete a la comunidad')}
+          </p>
         </div>
-        {/* Register Card */}
+        
         <div className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 p-8 mb-6 shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-            {/* Nombre */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-300">
-                Nombre Completo *
+                {t('auth.fullName', 'Nombre Completo')} *
               </label>
               <div className="relative">
                 <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
@@ -166,7 +182,7 @@ export default function Register() {
                       ? 'border-rose-500 focus:border-rose-400'
                       : 'border-white/10 focus:border-primary-500'
                   }`}
-                  placeholder="Tu nombre"
+                  placeholder={t('auth.namePlaceholder', 'Tu nombre')}
                   disabled={isLoading}
                 />
               </div>
@@ -177,10 +193,9 @@ export default function Register() {
               )}
             </div>
 
-            {/* Email */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-300">
-                Email *
+                {t('auth.email', 'Email')} *
               </label>
               <div className="relative">
                 <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
@@ -197,7 +212,7 @@ export default function Register() {
                       ? 'border-rose-500 focus:border-rose-400'
                       : 'border-white/10 focus:border-primary-500'
                   }`}
-                  placeholder="tu@email.com"
+                  placeholder={t('auth.emailPlaceholder', 'tu@email.com')}
                   disabled={isLoading}
                 />
               </div>
@@ -208,11 +223,10 @@ export default function Register() {
               )}
             </div>
 
-            {/* Contraseña */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="block text-sm font-medium text-gray-300">
-                  Contraseña *
+                  {t('auth.password', 'Contraseña')} *
                 </label>
                 {formData.password && (
                   <span className={`text-sm font-medium ${getPasswordStrengthText().color}`}>
@@ -235,7 +249,7 @@ export default function Register() {
                       ? 'border-rose-500 focus:border-rose-400'
                       : 'border-white/10 focus:border-primary-500'
                   }`}
-                  placeholder="••••••"
+                  placeholder={t('auth.passwordPlaceholder', '••••••')}
                   disabled={isLoading}
                 />
                 <button
@@ -251,7 +265,6 @@ export default function Register() {
                 </button>
               </div>
               
-              {/* Password strength indicator */}
               {formData.password && (
                 <div className="h-1 bg-white/10 rounded-full overflow-hidden">
                   <div
@@ -268,11 +281,10 @@ export default function Register() {
               )}
             </div>
 
-            {/* Confirmar Contraseña */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="block text-sm font-medium text-gray-300">
-                  Confirmar Contraseña *
+                  {t('auth.confirmPassword', 'Confirmar Contraseña')} *
                 </label>
               </div>
               <div className="relative">
@@ -290,7 +302,7 @@ export default function Register() {
                       ? 'border-rose-500 focus:border-rose-400'
                       : 'border-white/10 focus:border-primary-500'
                   }`}
-                  placeholder="••••••"
+                  placeholder={t('auth.passwordPlaceholder', '••••••')}
                   disabled={isLoading}
                 />
                 <button
@@ -312,7 +324,6 @@ export default function Register() {
               )}
             </div>
 
-            {/* Aceptar Términos */}
             <div className="space-y-2">
               <label className="flex items-center space-x-3 cursor-pointer group">
                 <div className="relative">
@@ -335,7 +346,7 @@ export default function Register() {
                   </div>
                 </div>
                 <span className="text-sm text-gray-300">
-                  Acepto los términos de servicio *
+                  {t('auth.acceptTerms', 'Acepto los términos de servicio')} *
                 </span>
               </label>
               {errors.acceptTerms && (
@@ -345,7 +356,6 @@ export default function Register() {
               )}
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
@@ -354,21 +364,20 @@ export default function Register() {
               {isLoading ? (
                 <div className="flex items-center justify-center gap-3">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Creando cuenta...
+                  {t('auth.registeringProgress', 'Creando cuenta...')}
                 </div>
               ) : (
-                'Registrarse'
+                t('auth.register', 'Registrarse')
               )}
             </button>
           </form>
         </div>
 
-        {/* Footer Links */}
         <div className="text-center space-y-4">
           <p className="text-gray-400 text-sm">
-            ¿Ya tienes cuenta?{' '}
+            {t('auth.haveAccount', '¿Ya tienes cuenta?')}{' '}
             <Link to="/login" className="font-semibold text-primary-400 hover:text-primary-300 transition-colors">
-              Inicia sesión
+              {t('auth.loginHere', 'Inicia sesión')}
             </Link>
           </p>
         </div>

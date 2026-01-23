@@ -5,8 +5,10 @@ import { gameService, categoryService } from '../api/services';
 import { Loading } from '../components/Loading';
 import CreateRoundModal from '../components/CreateRoundModal';
 import { ArrowLeft, Eye, EyeOff, Play, CheckCircle, Check, RefreshCw, Users, Trophy, Sword, Key } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function PlayRound() {
+  const { t } = useTranslation();
   const { gameId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,7 +30,6 @@ export default function PlayRound() {
   const [game, setGame] = useState(initialGame || null);
   const [categoryId, setCategoryId] = useState(null);
 
-  // Funció per reiniciar l'estat d'una nova ronda
   const resetRoundState = () => {
     console.log('Reiniciant estat de la nova ronda...');
     setRevealedPlayers([]);
@@ -38,7 +39,6 @@ export default function PlayRound() {
     setStartingPlayer(null);
   };
 
-  // Funció per carregar les dades del joc des de l'API
   const loadGameData = async () => {
     try {
       console.log('Carregant dades del joc:', gameId);
@@ -49,7 +49,6 @@ export default function PlayRound() {
         console.log('Dades del joc carregades:', gameData);
         setGame(gameData);
         
-        // Obtenir category_id del joc
         if (gameData.category_id) {
           setCategoryId(gameData.category_id);
           return gameData.category_id;
@@ -57,17 +56,15 @@ export default function PlayRound() {
       }
     } catch (error) {
       console.error('Error carregant dades del joc:', error);
-      addNotification('Error al carregar les dades del joc', 'error');
+      addNotification(t('messages.errorLoading', 'Error al carregar les dades del joc'), 'error');
     }
     return null;
   };
 
-  // Funció per carregar paraules de la categoria
   const loadCategoryWords = async (catId) => {
     try {
       console.log('Carregant paraules de la categoria:', catId);
       
-      // Provar amb /categories/{id}/words-only
       try {
         const response = await categoryService.getWordsOnly(catId);
         console.log('Resposta de getWordsOnly:', response);
@@ -81,7 +78,6 @@ export default function PlayRound() {
         console.log('Error amb words-only, provant amb getById:', wordsOnlyError);
       }
       
-      // Si words-only falla, provar amb /categories/{id}
       try {
         const response = await categoryService.getById(catId);
         console.log('Resposta de getById:', response);
@@ -98,7 +94,6 @@ export default function PlayRound() {
         console.log('Error carregant categoria:', categoryError);
       }
       
-      // Dades d'exemple com a últim recurs
       console.log('Utilitzant paraules d\'exemple');
       const exampleWords = [
         { id: 1, text: "Computadora", note: "Dispositiu electrònic" },
@@ -112,9 +107,8 @@ export default function PlayRound() {
       
     } catch (error) {
       console.error('Error carregant paraules:', error);
-      addNotification('Error al carregar les paraules', 'error');
+      addNotification(t('messages.errorLoadingWords', 'Error al carregar les paraules'), 'error');
       
-      // Tot i així establir paraules d'exemple
       const exampleWords = [
         { id: 1, text: "Computadora" },
         { id: 2, text: "Telèfon" },
@@ -127,7 +121,6 @@ export default function PlayRound() {
     }
   };
 
-  // Funció per carregar dades del localStorage per a la ronda actual
   const loadRoundStateFromStorage = (roundWordId) => {
     if (roundWordId) {
       console.log(`Carregant estat per a la ronda amb word_id: ${roundWordId}`);
@@ -152,7 +145,6 @@ export default function PlayRound() {
         setClickedPlayers([]);
       }
       
-      // Actualitzar l'ID de la ronda actual
       setCurrentRoundId(roundWordId);
     }
   };
@@ -160,7 +152,7 @@ export default function PlayRound() {
   useEffect(() => {
     const loadData = async () => {
       if (!roundData || !players || players.length === 0) {
-        addNotification('Dades incompletes de la ronda', 'error');
+        addNotification(t('playRound.incompleteData', 'Dades incompletes de la ronda'), 'error');
         setTimeout(() => navigate(`/game/${gameId}`), 2000);
         return;
       }
@@ -170,12 +162,10 @@ export default function PlayRound() {
       setSelectedPlayers(players);
       setGamePlayers(players);
       
-      // Carregar estat de localStorage per a aquesta ronda específica
       if (roundData.word_id) {
         loadRoundStateFromStorage(roundData.word_id);
       }
       
-      // Establir jugador inicial
       if (roundData.starting_player_id) {
         const starting = players.find(p => p.id === roundData.starting_player_id);
         setStartingPlayer(starting || players[0]);
@@ -184,9 +174,7 @@ export default function PlayRound() {
         setStartingPlayer(players[randomIndex]);
       }
       
-      // Carregar dades del joc i paraules
       try {
-        // Si ja tenim game amb category_id, usar-lo
         let catId = categoryId;
         
         if (!catId && initialGame && initialGame.category_id) {
@@ -194,12 +182,10 @@ export default function PlayRound() {
           setCategoryId(initialGame.category_id);
         }
         
-        // Si encara no tenim category_id, carregar dades del joc
         if (!catId) {
           catId = await loadGameData();
         }
         
-        // Carregar paraules de la categoria
         if (catId) {
           await loadCategoryWords(catId);
         } else {
@@ -213,7 +199,7 @@ export default function PlayRound() {
     };
 
     loadData();
-  }, [roundData, players, gameId, navigate, addNotification]);
+  }, [roundData, players, gameId, navigate, addNotification, t, categoryId, initialGame]);
 
   useEffect(() => {
     if (clickedPlayers.length >= selectedPlayers.length && selectedPlayers.length > 0) {
@@ -257,7 +243,7 @@ export default function PlayRound() {
 
   const handlePlayerClick = (playerId) => {
     if (clickedPlayers.includes(playerId)) {
-      addNotification('Ja has fet clic al teu botó', 'info');
+      addNotification(t('playRound.alreadyClicked', 'Ja has fet clic al teu botó'), 'info');
       return;
     }
 
@@ -267,11 +253,10 @@ export default function PlayRound() {
     const isRevealed = revealedPlayers.includes(playerId);
     
     if (isRevealed) {
-      addNotification('Ja has vist el teu rol', 'info');
+      addNotification(t('playRound.alreadySeen', 'Ja has vist el teu rol'), 'info');
       return;
     }
 
-    // IMPORTANT: Passar les paraules a PlayerRevealScreen
     navigate(`/game/${gameId}/player/${playerId}/reveal`, {
       state: {
         roundData,
@@ -280,18 +265,18 @@ export default function PlayRound() {
         gameId,
         categoryName,
         game: game || { id: gameId },
-        words: words // Això és crucial
+        words: words
       }
     });
   };
 
   const handleStartGame = () => {
-    addNotification(`Que comenci el joc! ${startingPlayer?.name} comença.`, 'success');
+    addNotification(t('playRound.gameStart', `Que comenci el joc! ${startingPlayer?.name} comença.`), 'success');
   };
 
   const handleRevealImpostor = () => {
     setShowImpostor(true);
-    addNotification('Impostor revelat!', 'info');
+    addNotification(t('playRound.impostorRevealed', 'Impostor revelat!'), 'info');
   };
 
   const handleCreateNewRound = async (newRoundData) => {
@@ -303,25 +288,22 @@ export default function PlayRound() {
       console.log('Paraules disponibles:', words);
       
       if (!newRoundData.word_id || !newRoundData.impostor_player_id) {
-        addNotification('Error: Falten dades per crear la ronda', 'error');
+        addNotification(t('playRound.missingData', 'Error: Falten dades per crear la ronda'), 'error');
         return;
       }
       
-      // Verificar que la paraula existeix al nostre array
       const selectedWord = words.find(w => w.id === newRoundData.word_id);
       if (!selectedWord) {
         console.error('Paraula no trobada:', newRoundData.word_id, 'en:', words);
-        addNotification('Error: La paraula seleccionada no existeix', 'error');
+        addNotification(t('playRound.wordNotFound', 'Error: La paraula seleccionada no existeix'), 'error');
         return;
       }
       
-      // Netejar localStorage de la ronda actual
       if (currentRoundId) {
         localStorage.removeItem(`revealed_${gameId}_${currentRoundId}`);
         localStorage.removeItem(`clicked_${gameId}_${currentRoundId}`);
       }
       
-      // Crear la ronda al backend
       try {
         const roundResponse = await gameService.createRound(gameId, {
           word_id: newRoundData.word_id,
@@ -336,36 +318,32 @@ export default function PlayRound() {
         }
       } catch (apiError) {
         console.error('Error creant ronda al backend:', apiError);
-        // Continuem igualment per mostrar la nova ronda al frontend
-        addNotification('Ronda creada (local)', 'info');
+        addNotification(t('playRound.roundCreatedLocal', 'Ronda creada (local)'), 'info');
       }
       
-      // Reiniciar tot l'estat per a la nova ronda
       resetRoundState();
       
-      addNotification('Nova ronda creada!', 'success');
+      addNotification(t('playRound.roundCreated', 'Nova ronda creada!'), 'success');
       
-      // Crear l'objecte de nova ronda amb totes les dades necessàries
       const newRoundComplete = {
         ...newRoundData,
         word_text: selectedWord.text
       };
       
-      // Navegar a la nova ronda amb tot reiniciat
       navigate(`/game/${gameId}/play`, {
         state: {
           roundData: newRoundComplete,
           players: gamePlayers,
           categoryName,
           game: game || { id: gameId, category_id: categoryId },
-          words: words // Passar les mateixes paraules
+          words: words
         },
         replace: true
       });
       
     } catch (error) {
       console.error('Error creant nova ronda:', error);
-      addNotification('Error al crear nova ronda', 'error');
+      addNotification(t('messages.error', 'Error al crear nova ronda'), 'error');
     } finally {
       setCreatingRound(false);
     }
@@ -373,7 +351,6 @@ export default function PlayRound() {
 
   const handleFinishRound = async () => {
     try {
-      // Guardar la ronda al backend si encara no s'ha fet
       if (roundData && roundData.word_id) {
         await gameService.createRound(gameId, {
           word_id: roundData.word_id,
@@ -382,17 +359,16 @@ export default function PlayRound() {
         });
       }
       
-      // Netejar localStorage d'AQUESTA ronda específica
       if (currentRoundId) {
         localStorage.removeItem(`revealed_${gameId}_${currentRoundId}`);
         localStorage.removeItem(`clicked_${gameId}_${currentRoundId}`);
       }
       
-      addNotification('Ronda guardada a l\'historial', 'success');
+      addNotification(t('playRound.roundSaved', 'Ronda guardada a l\'historial'), 'success');
       navigate(`/game/${gameId}`);
     } catch (error) {
       console.error('Error al guardar ronda:', error);
-      addNotification('Ronda completada', 'info');
+      addNotification(t('playRound.roundCompleted', 'Ronda completada'), 'info');
       navigate(`/game/${gameId}`);
     }
   };
@@ -414,14 +390,18 @@ export default function PlayRound() {
             className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-white transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
-            Tornar al joc
+            {t('common.back', 'Tornar')}
           </button>
           
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-white">Nova Ronda</h1>
-            <p className="text-gray-400">{categoryName || 'Joc'}</p>
+            <h1 className="text-3xl font-bold text-white">
+              {t('playRound.title', 'Nova Ronda')}
+            </h1>
+            <p className="text-gray-400">{categoryName || t('game.title', 'Joc')}</p>
             <p className="text-gray-500 text-sm">
-              {words.length > 0 ? `${words.length} paraules disponibles` : 'Carregant paraules...'}
+              {words.length > 0 
+                ? t('playRound.wordsAvailable', `${words.length} paraules disponibles`) 
+                : t('playRound.loadingWords', 'Carregant paraules...')}
             </p>
           </div>
           
@@ -431,12 +411,17 @@ export default function PlayRound() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
             <span className="text-gray-400 text-sm">
-              {clickedPlayers.length}/{selectedPlayers.length} jugadors han fet clic
+              {t('playRound.playersClicked', '{clicked}/{total} jugadors han fet clic', {
+                clicked: clickedPlayers.length,
+                total: selectedPlayers.length
+              })}
             </span>
             <span className={`text-sm font-medium ${
               isComplete ? 'text-emerald-400' : 'text-yellow-400'
             }`}>
-              {isComplete ? 'Tots a punt!' : 'Esperant...'}
+              {isComplete 
+                ? t('playRound.everyoneReady', 'Tots a punt!') 
+                : t('playRound.waiting', 'Esperant...')}
             </span>
           </div>
           <div className="w-full bg-white/5 rounded-full h-3 overflow-hidden">
@@ -458,9 +443,13 @@ export default function PlayRound() {
                 <Trophy className="w-8 h-8 text-yellow-300" />
               </div>
               <div className="text-center">
-                <h3 className="text-xl font-bold text-yellow-300 mb-2">Ronda llesta per començar!</h3>
+                <h3 className="text-xl font-bold text-yellow-300 mb-2">
+                  {t('playRound.roundReady', 'Ronda llesta per començar!')}
+                </h3>
                 <p className="text-gray-300 text-lg">
-                  <span className="font-bold text-yellow-300">{startingPlayer.name}</span> començarà la ronda
+                  {t('playRound.starterMessage', '{name} començarà la ronda', {
+                    name: <span className="font-bold text-yellow-300">{startingPlayer.name}</span>
+                  })}
                 </p>
               </div>
               <div className="p-3 bg-yellow-500/20 rounded-xl">
@@ -478,7 +467,7 @@ export default function PlayRound() {
                 className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-xl font-medium transition-all flex items-center gap-2"
               >
                 <Play className="w-5 h-5" />
-                Començar Joc
+                {t('playRound.startGame', 'Començar Joc')}
               </button>
               
               <button
@@ -491,7 +480,9 @@ export default function PlayRound() {
                 }`}
               >
                 <RefreshCw className="w-5 h-5" />
-                {words.length > 0 ? 'Nova Ronda' : 'Sense paraules'}
+                {words.length > 0 
+                  ? t('playRound.newRound', 'Nova Ronda') 
+                  : t('playRound.noWords', 'Sense paraules')}
               </button>
               
               <button
@@ -499,7 +490,7 @@ export default function PlayRound() {
                 className="px-6 py-3 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white rounded-xl font-medium transition-all flex items-center gap-2"
               >
                 <Eye className="w-5 h-5" />
-                Revelar Impostor
+                {t('playRound.revealImpostor', 'Revelar Impostor')}
               </button>
               
               <button
@@ -507,7 +498,7 @@ export default function PlayRound() {
                 className="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-xl font-medium transition-all flex items-center gap-2"
               >
                 <CheckCircle className="w-5 h-5" />
-                Finalitzar Ronda
+                {t('playRound.finishRound', 'Finalitzar Ronda')}
               </button>
             </div>
           </div>
@@ -562,18 +553,24 @@ export default function PlayRound() {
                           {isRevealed ? (
                             <>
                               <Check className="w-4 h-4 text-emerald-300" />
-                              <span className="text-emerald-300 text-sm font-medium">Ja ha vist</span>
+                              <span className="text-emerald-300 text-sm font-medium">
+                                {t('playRound.alreadySeen', 'Ja ha vist')}
+                              </span>
                             </>
                           ) : (
                             <>
                               <Eye className="w-4 h-4 text-blue-300" />
-                              <span className="text-blue-300 text-sm font-medium">Clic registrat</span>
+                              <span className="text-blue-300 text-sm font-medium">
+                                {t('playRound.clickRegistered', 'Clic registrat')}
+                              </span>
                             </>
                           )}
                         </div>
                       </div>
                     ) : (
-                      <p className="text-primary-300 text-sm mt-2">Clic per veure el teu rol</p>
+                      <p className="text-primary-300 text-sm mt-2">
+                        {t('playRound.clickToSeeRole', 'Clic per veure el teu rol')}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -581,7 +578,7 @@ export default function PlayRound() {
                 {isStarting && isComplete && (
                   <div className="absolute top-3 right-3">
                     <span className="px-2 py-1 bg-yellow-500/30 text-yellow-300 text-xs font-bold rounded-full animate-pulse">
-                      COMENÇA
+                      {t('playRound.starts', 'COMENÇA')}
                     </span>
                   </div>
                 )}
@@ -595,39 +592,53 @@ export default function PlayRound() {
             <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border border-blue-500/20 rounded-xl p-3 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Key className="w-4 h-4 text-blue-300" />
-                <span className="text-xs font-medium text-blue-300">Paraula</span>
+                <span className="text-xs font-medium text-blue-300">
+                  {t('game.word', 'Paraula')}
+                </span>
               </div>
               <div className="flex items-center justify-center">
                 <EyeOff className="w-5 h-5 text-blue-300/50" />
-                <span className="text-xs text-gray-400 ml-2">Secreta</span>
+                <span className="text-xs text-gray-400 ml-2">
+                  {t('playRound.secret', 'Secreta')}
+                </span>
               </div>
             </div>
             
             <div className="bg-gradient-to-br from-rose-500/10 to-rose-600/10 border border-rose-500/20 rounded-xl p-3 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Sword className="w-4 h-4 text-rose-300" />
-                <span className="text-xs font-medium text-rose-300">Impostor</span>
+                <span className="text-xs font-medium text-rose-300">
+                  {t('game.impostor', 'Impostor')}
+                </span>
               </div>
               <div className="flex items-center justify-center">
                 <EyeOff className="w-5 h-5 text-rose-300/50" />
-                <span className="text-xs text-gray-400 ml-2">Secret</span>
+                <span className="text-xs text-gray-400 ml-2">
+                  {t('playRound.secret', 'Secret')}
+                </span>
               </div>
             </div>
             
             <div className="bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 border border-yellow-500/20 rounded-xl p-3 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Users className="w-4 h-4 text-yellow-300" />
-                <span className="text-xs font-medium text-yellow-300">Comença</span>
+                <span className="text-xs font-medium text-yellow-300">
+                  {t('playRound.starts', 'Comença')}
+                </span>
               </div>
               {isComplete ? (
                 <div className="flex flex-col items-center">
                   <span className="text-sm font-bold text-yellow-300">{startingPlayer?.name}</span>
-                  <span className="text-xs text-gray-400">Aleatori</span>
+                  <span className="text-xs text-gray-400">
+                    {t('playRound.random', 'Aleatori')}
+                  </span>
                 </div>
               ) : (
                 <div className="flex items-center justify-center">
                   <EyeOff className="w-5 h-5 text-yellow-300/50" />
-                  <span className="text-xs text-gray-400 ml-2">Secret</span>
+                  <span className="text-xs text-gray-400 ml-2">
+                    {t('playRound.secret', 'Secret')}
+                  </span>
                 </div>
               )}
             </div>
@@ -642,14 +653,18 @@ export default function PlayRound() {
               </div>
               
               <div>
-                <h3 className="text-2xl font-bold text-white mb-2">L'impostor era!</h3>
+                <h3 className="text-2xl font-bold text-white mb-2">
+                  {t('playRound.impostorWas', 'L\'impostor era!')}
+                </h3>
                 <div className="flex items-center justify-center gap-4 mb-6">
                   <div className="w-16 h-16 bg-gradient-to-br from-rose-500 to-rose-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
                     {impostor?.name?.charAt(0) || '?'}
                   </div>
                   <div>
-                    <span className="text-3xl font-bold text-rose-300 block">{impostor?.name || 'Desconegut'}</span>
-                    <span className="text-rose-400 text-sm">Ha estat l'impostor!</span>
+                    <span className="text-3xl font-bold text-rose-300 block">{impostor?.name || t('playRound.unknown', 'Desconegut')}</span>
+                    <span className="text-rose-400 text-sm">
+                      {t('playRound.wasImpostor', 'Ha estat l\'impostor!')}
+                    </span>
                   </div>
                 </div>
                 
@@ -664,7 +679,7 @@ export default function PlayRound() {
                     }`}
                   >
                     <RefreshCw className="w-5 h-5" />
-                    Nova Ronda
+                    {t('playRound.newRound', 'Nova Ronda')}
                   </button>
                   
                   <button
@@ -672,7 +687,7 @@ export default function PlayRound() {
                     className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-xl font-medium transition-all flex items-center gap-2"
                   >
                     <CheckCircle className="w-5 h-5" />
-                    Guardar i Sortir
+                    {t('playRound.saveAndExit', 'Guardar i Sortir')}
                   </button>
                 </div>
               </div>

@@ -5,8 +5,18 @@ export const authService = {
   login: (login, password) => apiClient.post('/login', { login, password }),
   logout: () => apiClient.post('/logout'),
   forgotPassword: (email) => apiClient.post('/forgot-password', { email }),
-  resetPassword: (email, token, password, passwordConfirmation) => 
-    apiClient.post('/reset-password', { email, token, password, password_confirmation: passwordConfirmation }),
+  resetPassword: ({ email, token, password, password_confirmation }) => 
+    apiClient.post('/reset-password', { 
+      email, 
+      token, 
+      password, 
+      password_confirmation 
+    }),
+  verifyEmail: (id, hash, params = {}) => 
+    apiClient.get(`/email/verify/${id}/${hash}`, { params }),
+  resendVerification: (email) => apiClient.post('/email/verification-notification', { email }),
+  changePassword: (data) => apiClient.put('/user/password', data),
+  getCurrentUser: () => apiClient.get('/user'),
 };
 
 export const categoryService = {
@@ -41,7 +51,6 @@ export const userService = {
   updateProfile: (data) => apiClient.put('/user', data),
   uploadAvatar: (formData) => 
     apiClient.post('/user/avatar', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
-  changePassword: (data) => apiClient.put('/user/password', data),
 };
 
 export const localeService = {

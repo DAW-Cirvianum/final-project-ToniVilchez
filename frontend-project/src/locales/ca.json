@@ -9,25 +9,106 @@
     "register": "Registrar-se",
     "logout": "Tancar Sessió",
     "categories": "Categories",
-    "games": "Jocs"
+    "games": "Jocs",
+    "emailUser": "Correu o Usuari",
+    "subtitle": "Apren paraules jugant"
   },
   "auth": {
     "login": "Iniciar Sessió",
     "register": "Registrar-se",
     "email": "Email",
     "username": "Nom d'Usuari",
+    "fullName": "Nom Complet",
     "password": "Contrasenya",
     "confirmPassword": "Confirmar Contrasenya",
     "rememberMe": "Recorda'm",
     "forgotPassword": "Vas oblidar la contrasenya?",
     "noAccount": "No tens compte?",
     "haveAccount": "Ja tens compte?",
-    "language": "Idioma"
+    "language": "Idioma",
+    "subtitle": "Apren paraules jugant",
+    "emailPlaceholder": "admin@admin.com",
+    "namePlaceholder": "El teu nom",
+    "usernamePlaceholder": "el_teu_usuari",
+    "passwordPlaceholder": "••••••",
+    "confirmPasswordPlaceholder": "••••••",
+    "registerSubtitle": "Uneix-te a la comunitat",
+    "acceptTerms": "Accepto els termes de servei",
+    "loggingIn": "Iniciant sessió...",
+    "registerHere": "Registra't aquí",
+    "loginHere": "Inicia sessió aquí",
+    "registeringProgress": "Creant compte...",
+    "passwordStrength": {
+      "veryWeak": "Molt dèbil",
+      "weak": "Dèbil",
+      "normal": "Normal",
+      "strong": "Fort",
+      "veryStrong": "Molt fort"
+    },
+    "errors": {
+      "loginRequired": "Correu o usuari és requerit",
+      "passwordRequired": "Contrasenya és requerida",
+      "usernameRequired": "Nom d'usuari és requerit",
+      "nameRequired": "Nom és requerit",
+      "nameMinLength": "El nom ha de tenir almenys 3 caràcters",
+      "nameMaxLength": "El nom no pot superar 50 caràcters",
+      "emailRequired": "Email és requerit",
+      "emailInvalid": "Email no vàlid",
+      "passwordMinLength": "La contrasenya ha de tenir almenys 6 caràcters",
+      "confirmPasswordRequired": "Confirma la contrasenya",
+      "passwordsDontMatch": "Les contrasenyes no coincideixen",
+      "acceptTerms": "Has d'acceptar els termes de servei",
+      "invalidResetLink": "Link de recuperació invàlid o expirat",
+      "invalidVerificationLink": "Link de verificació invàlid",
+      "emailNotFound": "No s'ha trobat cap compte amb aquest email",
+      "invalidData": "Dades invàlides",
+      "tokenExpired": "El token ha expirat",
+      "tokenInvalid": "Token invàlid"
+    },
+    "messages": {
+      "completeForm": "Si us plau, completa el formulari",
+      "welcome": "¡Benvingut!",
+      "loginError": "Error en l'inici de sessió",
+      "registerError": "Error en el registre",
+      "registerSuccess": "Compte creat exitosament",
+      "loggingInProgress": "Iniciant sessió...",
+      "registeringProgress": "Registrant...",
+      "resetLinkSent": "T'hem enviat un email amb les instruccions per restablir la contrasenya.",
+      "resetLinkError": "Error en enviar el link de recuperació",
+      "passwordResetSuccess": "Contrasenya restablerta correctament. Ara pots iniciar sessió amb la teva nova contrasenya.",
+      "passwordResetError": "Error restablint la contrasenya",
+      "emailVerified": "Email verificat correctament",
+      "emailVerifyError": "Error verificant email",
+      "checkEmailInstructions": "Revisa la teva safata d'entrada i la carpeta de spam.",
+      "redirectingToLogin": "Redirigint a la pàgina d'inici de sessió..."
+    },
+    "forgotPasswordTitle": "Recuperar Contrasenya",
+    "forgotPasswordSubtitle": "Introdueix el teu email per rebre un link de recuperació",
+    "resetPasswordTitle": "Nova Contrasenya",
+    "resetPasswordButton": "Canviar Contrasenya",
+    "sendResetLink": "Enviar Link de Recuperació",
+    "backToLogin": "Tornar a Login",
+    "emailVerification": "Verificació d'Email",
+    "verifyingEmail": "Verificant email...",
+    "createNewAccount": "Crear nova compte",
+    "newPassword": "Nova Contrasenya",
+    "newPasswordPlaceholder": "Introdueix la nova contrasenya",
+    "confirmNewPassword": "Confirma Nova Contrasenya",
+    "confirmNewPasswordPlaceholder": "Confirma la nova contrasenya",
+    "resendVerification": "Reenviar email de verificació",
+    "throttleInfo": "Pots sol·licitar un restabliment de contrasenya cada 60 segons"
+  },
+  "serverErrors": {
+    "passwords.user": "No s'ha trobat cap usuari amb aquest email",
+    "passwords.token": "El token de recuperació no és vàlid",
+    "passwords.throttled": "Has fet massa sol·licitats. Espera uns minuts.",
+    "passwords.reset": "La contrasenya s'ha restablert correctament",
+    "passwords.sent": "T'hem enviat un email amb les instruccions"
   },
   "common": {
     "loading": "Carregant...",
     "save": "Guardar",
-    "cancel": "Cancelar",
+    "cancel": "Cancel·lar",
     "delete": "Eliminar",
     "edit": "Editar",
     "add": "Afegir",
@@ -38,17 +119,148 @@
     "success": "Èxit",
     "error": "Error",
     "warning": "Avís",
-    "info": "Informació"
+    "info": "Informació",
+    "close": "Tancar",
+    "yes": "Sí",
+    "no": "No",
+    "confirm": "Confirmar",
+    "create": "Crear",
+    "update": "Actualitzar",
+    "saving": "Guardant...",
+    "secretSetup": "Configuració secreta",
+    "secretInformation": "Informació Secreta",
+    "selected": "Seleccionada",
+    "notSelected": "No seleccionada",
+    "word": "paraula",
+    "and": " i",
+    "selecting": "Seleccionant...",
+    "backToMenu": "Tornar al Menú",
+    "closeNotification": "Tancar notificació",
+    "processing": "Processant...",
+    "waitBeforeRetry": "Si us plau, espera"
+  },
+  "playerReveal": {
+    "backToGame": "Tornar al joc",
+    "yourSecretRole": "Aquest és el teu rol secret",
+    "retry": "Reintentar",
+    "errors": {
+      "noWordId": "No hi ha ID de paraula en les dades de la ronda",
+      "wordNotFound": "No es va poder trobar la paraula amb ID: {{id}}",
+      "incompleteData": "Dades incompletes de la ronda",
+      "playerNotFound": "Jugador no trobat",
+      "wordLoadError": "No es va poder carregar la paraula: {{error}}",
+      "generalLoadError": "Error al carregar les dades del jugador",
+      "infoLoadError": "Error al carregar la informació"
+    },
+    "wordFromRoundData": "Paraula de la ronda actual",
+    "secretWord": "Paraula secreta",
+    "wordWillLoadDuringGame": "La paraula es carregarà durant el joc",
+    "youAreTheImpostor": "¡ETS L'IMPOSTOR!",
+    "yourSecretIdentity": "La teva identitat secreta",
+    "onlyYouKnow": "Només tu saps que ets l'impostor. La resta veu una paraula que tu",
+    "doNotKnow": "NO coneixes",
+    "yourMission": "La teva missió",
+    "deceive": "Enganya",
+    "deceiveDescription": "als altres fent-los creure que coneixes la paraula",
+    "guess": "Encerta",
+    "guessDescription": "o descobreix quina és la paraula real",
+    "secretWordIs": "La paraula secreta és",
+    "allPlayersSeeSameWord": "Tots els jugadors (excepte l'impostor) veuen aquesta mateixa paraula",
+    "discoverImpostor": "Descobrir qui és l'impostor",
+    "withoutSayingWord": "sense dir la paraula directament",
+    "impostorWillTry": "L'impostor intentarà enganyar-vos i encertar la paraula.",
+    "understoodBackToGame": "Entès, tornar al joc"
+  },
+  "home": {
+    "title": "Impostor",
+    "subtitle": "Juga a endevinar qui és l'impostor en aquesta emocionant experiència social",
+    "startPlaying": "Començar a jugar",
+    "createAccount": "Crear compte",
+    "features": {
+      "customizable": {
+        "title": "Personalitzable",
+        "description": "Crea les teves pròpies categories i paraules"
+      },
+      "multiplayer": {
+        "title": "Multijugador",
+        "description": "Juga amb amics en temps real"
+      },
+      "competitive": {
+        "title": "Competitiu",
+        "description": "Segueix el teu progrés i competeix"
+      }
+    },
+    "howItWorks": {
+      "title": "Com funciona?",
+      "description": "En cada ronda, s'assigna una paraula secreta a tots els jugadors excepte a l'impostor. L'impostor ha d'endevinar-la fent-se passar per un més, mentre la resta intenten descobrir qui és l'impostor.",
+      "step1": "Selecciona categoria",
+      "step2": "Afegeix jugadors",
+      "step3": "¡Comença a jugar!"
+    }
   },
   "categories": {
     "title": "Categories",
+    "subtitle": "Gestiona les teves categories de paraules",
     "create": "Crear Categoria",
+    "search": "Buscant Categories...",
     "new": "Nova Categoria",
     "name": "Nom",
+    "order": "Ordenar per nom",
     "description": "Descripció",
     "words": "paraules",
     "play": "Jugar",
-    "notFound": "No s'han trobat categories"
+    "notFound": "No s'han trobat categories",
+    "by": "per",
+    "default": "Predeterminada",
+    "viewWords": "Veure paraules",
+    "editTitle": "Editar categoria",
+    "addWordTitle": "Afegir paraula",
+    "setDefaultTitle": "Marcar com a predeterminada",
+    "isDefault": "Categoria predeterminada",
+    "deleteTitle": "Eliminar categoria",
+    "createFirst": "Crear primera categoria",
+    "searchTryDifferent": "Prova amb un altre terme de cerca",
+    "noCategoriesAvailable": "No hi ha categories disponibles",
+    "adminMode": "Mode Administrador",
+    "adminPermissions": "Pots editar i eliminar totes les categories",
+    "sort": {
+      "recent": "Més recents",
+      "owner": "Les meves categories primer"
+    },
+    "errors": {
+      "nameRequired": "El nom és requerit",
+      "nameMinLength": "El nom ha de tenir almenys 3 caràcters"
+    },
+    "messages": {
+      "createdSuccess": "Categoria creada exitosament",
+      "createdError": "Error en crear la categoria",
+      "updatedSuccess": "Categoria actualitzada exitosament",
+      "updatedError": "Error en actualitzar la categoria",
+      "setDefaultSuccess": "Categoria marcada com a predeterminada",
+      "setDefaultError": "Error en marcar com a predeterminada",
+      "deletedSuccess": "Categoria eliminada"
+    },
+    "modal": {
+      "createTitle": "Crear Nova Categoria",
+      "editTitle": "Editar Categoria",
+      "nameLabel": "Nom de la categoria",
+      "namePlaceholder": "Ex: Animals, Pel·lícules, Menjar...",
+      "descriptionLabel": "Descripció (opcional)",
+      "descriptionPlaceholder": "Breu descripció de la categoria...",
+      "setDefault": "Marcar com a categoria predeterminada",
+      "createButton": "Crear Categoria",
+      "saveButton": "Guardar Canvis"
+    },
+    "wordsModal": {
+      "title": "Paraules",
+      "noWords": "No hi ha paraules en aquesta categoria",
+      "total": "Total"
+    },
+    "deleteModal": {
+      "title": "Confirmar eliminació",
+      "message": "Estàs segur que vols eliminar aquesta categoria? S'eliminaran totes les seves paraules.",
+      "confirmDelete": "Sí, eliminar"
+    }
   },
   "game": {
     "title": "Joc",
@@ -59,12 +271,325 @@
     "newRound": "Nova Ronda",
     "start": "Començar Joc",
     "impostor": "Impostor",
-    "word": "Paraula"
+    "word": "Paraula",
+    "category": "Categoria",
+    "randomWord": "Paraula Aleatòria",
+    "notFound": "Joc no trobat",
+    "backToCategories": "Tornar a categories",
+    "matchNumber": "Partida",
+    "uniqueWords": "Paraules úniques",
+    "participants": "participants",
+    "completed": "completades",
+    "round": "Ronda",
+    "notAvailable": "N/A",
+    "noRoundsYet": "No hi ha rondes encara",
+    "startFirstRound": "Comença la primera ronda per començar a jugar",
+    "createFirstRound": "Crear Primera Ronda",
+    "startingPlayer": "Comença",
+    "messages": {
+      "errorLoading": "Error al carregar el joc",
+      "noCategory": "No es pot carregar paraules: categoria no trobada",
+      "noWordsInCategory": "Aquesta categoria no té paraules. Afegeix-ne algunes primer.",
+      "noPlayers": "No hi ha jugadors en aquest joc.",
+      "errorPreparingRound": "Error al preparar la ronda",
+      "errorCreatingRound": "Error al crear ronda"
+    }
+  },
+  "games": {
+    "title": "Historial de Partides",
+    "subtitle": "Revisa totes les teves partides i les seves rondes",
+    "newGame": "Nova Partida",
+    "viewGame": "Veure partida",
+    "players": "jugadors",
+    "rounds": "Rondes",
+    "words": "Paraules",
+    "status": "Estat",
+    "completed": "Completada",
+    "inProgress": "En curs",
+    "playedRounds": "Rondes jugades",
+    "secretWord": "Paraula secreta",
+    "secretImpostor": "Impostor secret",
+    "noRoundsInGame": "No hi ha rondes en aquesta partida encara",
+    "playFirstRound": "Jugar primera ronda",
+    "noGamesHistory": "No hi ha partides al teu historial",
+    "startCreatingFirstGame": "Comença creant la teva primera partida",
+    "createFirstGame": "Crear Primera Partida",
+    "unknownDate": "Data desconeguda",
+    "dateLocale": "ca-ES",
+    "noCategory": "Joc sense categoria",
+    "stats": {
+      "games": "Partides",
+      "totalRounds": "Rondes totals",
+      "uniqueWords": "Paraules úniques",
+      "totalPlayers": "Jugadors totals"
+    },
+    "demo": {
+      "showingDemoData": "Mostrant dades de demostració.",
+      "createRealGame": " Crea una partida real per veure el teu historial.",
+      "category1": "Pel·lícules",
+      "category2": "Animals",
+      "player1": "Jugador 1",
+      "player2": "Jugador 2",
+      "player3": "Jugador 3",
+      "word1": "TITANIC",
+      "word2": "MATRIX",
+      "word3": "ELEFANT"
+    },
+    "messages": {
+      "errorLoading": "Error al carregar historial de jocs"
+    }
+  },
+  "gameSetup": {
+    "title": "Configurar Joc",
+    "subtitle": "Prepara la teva partida d'Impostor",
+    "selectCategory": "Selecciona una categoria",
+    "chooseCategory": "-- Tria una categoria --",
+    "players": "jugadors",
+    "playerPlaceholder": "Jugador {{number}}",
+    "dragToReorder": "Arrossega per reordenar",
+    "removePlayer": "Eliminar jugador",
+    "dragInstructions": "Arrossega els jugadors per reordenar-los",
+    "startingGame": "Iniciant joc...",
+    "errors": {
+      "categoryRequired": "Has de seleccionar una categoria",
+      "minPlayers": "Es necessiten almenys 2 jugadors",
+      "uniquePlayers": "Els noms dels jugadors han de ser únics",
+      "playerMinLength": "El nom ha de tenir almenys 2 caràcters",
+      "playerMaxLength": "El nom és molt llarg"
+    },
+    "messages": {
+      "completeForm": "Si us plau, completa el formulari correctament",
+      "gameStarted": "¡Joc iniciat!",
+      "errorStartingGame": "Error al iniciar el joc"
+    }
+  },
+  "playRound": {
+    "title": "Nova Ronda",
+    "wordsAvailable": "{{count}} paraules disponibles",
+    "loadingWords": "Carregant paraules...",
+    "playersClicked": "{{clicked}}/{{total}} jugadors han fet clic",
+    "everyoneReady": "Tots a punt!",
+    "waiting": "Esperant...",
+    "roundReady": "Ronda llesta per començar!",
+    "starterMessage": "{{name}} començarà la ronda",
+    "startGame": "Començar Joc",
+    "newRound": "Nova Ronda",
+    "noWords": "Sense paraules",
+    "revealImpostor": "Revelar Impostor",
+    "finishRound": "Finalitzar Ronda",
+    "alreadyClicked": "Ja has fet clic al teu botó",
+    "alreadySeen": "Ja has vist el teu rol",
+    "clickRegistered": "Clic registrat",
+    "clickToSeeRole": "Clic per veure el teu rol",
+    "starts": "COMENÇA",
+    "word": "Paraula",
+    "secret": "Secreta",
+    "impostor": "Impostor",
+    "random": "Aleatori",
+    "impostorWas": "L'impostor era!",
+    "unknown": "Desconegut",
+    "wasImpostor": "Ha estat l'impostor!",
+    "saveAndExit": "Guardar i Sortir",
+    "gameStart": "Que comenci el joc! {{name}} comença.",
+    "impostorRevealed": "Impostor revelat!",
+    "missingData": "Error: Falten dades per crear la ronda",
+    "wordNotFound": "Error: La paraula seleccionada no existeix",
+    "roundCreatedLocal": "Ronda creada (local)",
+    "roundCreated": "Nova ronda creada!",
+    "roundSaved": "Ronda guardada a l'historial",
+    "roundCompleted": "Ronda completada",
+    "incompleteData": "Dades incompletes de la ronda"
+  },
+  "createRoundModal": {
+    "title": "Crear Nova Ronda",
+    "selectImpostor": "Selecciona l'impostor",
+    "selectWord": "Selecciona una paraula",
+    "selectStarter": "Selecciona qui comença",
+    "loadingWords": "Carregant paraules...",
+    "noWordsAvailable": "No hi ha paraules disponibles",
+    "createRound": "Crear Ronda",
+    "creating": "Creant...",
+    "cancel": "Cancel·lar",
+    "playersWillSeeRole": "Els jugadors veuran el seu rol en fer clic",
+    "randomlySelected": "S'han seleccionat aleatòriament:",
+    "clickRandomize": "Fes clic a \"Canviar Aleatori\"",
+    "toGenerateNew": "per generar una nova configuració secreta.",
+    "playersDiscoverRole": "Els jugadors descobriran el seu rol en fer clic al seu nom.",
+    "noWordsOrPlayers": "No hi ha paraules ni jugadors disponibles",
+    "changeRandom": "Canviar Aleatori",
+    "startRound": "Iniciar Ronda",
+    "errors": {
+      "impostorRequired": "Has de seleccionar un impostor",
+      "wordRequired": "Has de seleccionar una paraula"
+    }
+  },
+  "profile": {
+    "title": "El meu Perfil",
+    "subtitle": "Gestiona la teva informació personal i preferències",
+    "personalInfo": "Informació personal",
+    "stats": {
+      "title": "Estadístiques",
+      "gamesPlayed": "Jocs jugats",
+      "categoriesCreated": "Categories creades",
+      "memberSince": "Membre des de"
+    },
+    "fields": {
+      "fullName": "Nom complet",
+      "preferredLanguage": "Idioma preferit"
+    },
+    "placeholders": {
+      "yourName": "El teu nom"
+    },
+    "role": {
+      "admin": "Administrador",
+      "user": "Usuari"
+    },
+    "saveChanges": "Guardar canvis",
+    "saveImage": "Guardar imatge",
+    "avatarUpdated": "Imatge de perfil actualitzada correctament",
+    "profileUpdated": "Perfil actualitzat correctament",
+    "preview": "Vista prèvia",
+    "profilePicture": "Perfil",
+    "user": "Usuari",
+    "errors": {
+      "nameRequired": "El nom és requerit",
+      "emailRequired": "L'email és requerit",
+      "emailInvalid": "Email no vàlid",
+      "invalidImage": "Si us plau selecciona una imatge vàlida",
+      "imageTooLarge": "La imatge no pot superar els 5MB",
+      "selectImageFirst": "Si us plau selecciona una imatge primer",
+      "correctErrors": "Si us plau corregeix els errors",
+      "updateError": "Error en actualitzar el perfil"
+    },
+    "security": {
+      "title": "Seguretat",
+      "changePassword": "Canviar contrasenya",
+      "changePasswordDescription": "Actualitza la teva contrasenya regularment per mantenir la seguretat",
+      "activeSessions": "Sessions actives",
+      "activeSessionsDescription": "Gestiona les teves sessions actives en altres dispositius",
+      "change": "Canviar",
+      "viewSessions": "Veure sessions"
+    }
   },
   "messages": {
     "sessionExpired": "La teva sessió ha expirat",
     "error": "Ha ocorregut un error",
     "success": "Operació completada amb èxit",
-    "pleaseLogin": "Si us plau, inicia sessió"
+    "pleaseLogin": "Si us plau, inicia sessió",
+    "errorLoadingCategories": "Error en carregar categories",
+    "errorLoadingWords": "Error en carregar paraules",
+    "errorLoadingGame": "Error en carregar el joc"
+  },
+  "notifications": {
+    "error": "Error",
+    "success": "Èxit",
+    "warning": "Advertència",
+    "info": "Informació"
+  },
+  "addWordModal": {
+    "title": "Afegir Paraula",
+    "subtitle": "Afegeix una nova paraula a aquesta categoria",
+    "placeholders": {
+      "wordExample": "Ex: Ordinador, Sol, Muntanya..."
+    },
+    "hint": "La paraula ha de ser única dins d'aquesta categoria.",
+    "addButton": "Afegir Paraula",
+    "adding": "Afegint...",
+    "wordAddedSuccess": "Paraula afegida correctament",
+    "errors": {
+      "textRequired": "La paraula és requerida",
+      "textMinLength": "La paraula ha de tenir almenys 2 caràcters",
+      "textMaxLength": "La paraula no pot superar 50 caràcters",
+      "addError": "Error en afegir paraula"
+    }
+  },
+  "adminUsers": {
+    "title": "Gestió d'Usuaris",
+    "subtitle": "Panell d'administració",
+    "totalUsers": "Total",
+    "users": "usuaris",
+    "searchPlaceholder": "Cercar per nom o email...",
+    "loadingUsers": "Carregant usuaris...",
+    "noSearchResults": "No s'han trobat usuaris amb aquesta cerca",
+    "noUsers": "No hi ha usuaris registrats",
+    "noName": "Sense nom",
+    "admin": "ADMIN",
+    "inactive": "INACTIU",
+    "id": "ID",
+    "registered": "Registrat",
+    "language": "Idioma",
+    "userRole": "Usuari",
+    "adminRole": "Administrador",
+    "deleteUser": "Eliminar usuari",
+    "importantInfo": "Informació important",
+    "info": {
+      "adminOnly": "Només visible per a usuaris amb rol d'administrador",
+      "cannotChangeOwnRole": "No pots canviar el teu propi rol",
+      "cannotDeleteSelf": "No pots eliminar-te a tu mateix",
+      "immediateChanges": "Els canvis s'apliquen immediatament"
+    },
+    "roleUpdated": "Rol actualitzat",
+    "userDeleted": "Usuari eliminat",
+    "confirmDelete": "Estàs segur d'eliminar aquest usuari? Aquesta acció no es pot desfer.",
+    "errors": {
+      "loadUsers": "Error en carregar usuaris",
+      "serverError": "Error de connexió amb el servidor",
+      "updateError": "Error en actualitzar",
+      "updateRoleError": "Error en actualitzar rol",
+      "deleteError": "Error en eliminar",
+      "deleteUserError": "Error en eliminar usuari"
+    }
+  },
+  "languageSwitcher": {
+    "changeTo": "Canvia a",
+    "warnings": {
+      "corsWarning": "No es pot sincronitzar idioma (CORS potser)",
+      "syncError": "Error sincronitzant idioma, però funciona localment"
+    },
+    "errors": {
+      "changeError": "Error canviant idioma:"
+    }
+  },
+  "errorBoundary": {
+    "title": "Alguna cosa ha sortit malament",
+    "unexpectedError": "Ha ocorregut un error inesperat",
+    "retry": "Reintentar",
+    "goHome": "Tornar a l'inici",
+    "errorCaptured": "Error capturat:"
+  },
+  "confirmModal": {
+    "types": {
+      "warning": "Advertència",
+      "danger": "Perill",
+      "info": "Informació"
+    }
+  },
+  "adminWordManager": {
+    "title": "Gestió de Paraules",
+    "categoryLabel": "Categoria",
+    "addNewWord": "Afegir nova paraula",
+    "noWords": "No hi ha paraules en aquesta categoria",
+    "totalWords": "Total",
+    "placeholders": {
+      "newWord": "Escriu una nova paraula..."
+    },
+    "tooltips": {
+      "editWord": "Editar paraula",
+      "deleteWord": "Eliminar paraula"
+    },
+    "confirmations": {
+      "deleteWord": "Estàs segur d'eliminar aquesta paraula?"
+    },
+    "messages": {
+      "wordAdded": "Paraula afegida correctament",
+      "wordUpdated": "Paraula actualitzada correctament",
+      "wordDeleted": "Paraula eliminada correctament"
+    },
+    "errors": {
+      "loadWords": "Error al carregar paraules",
+      "addWord": "Error al afegir paraula",
+      "updateWord": "Error al actualitzar paraula",
+      "deleteWord": "Error al eliminar paraula"
+    }
   }
 }

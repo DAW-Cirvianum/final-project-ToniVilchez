@@ -4,12 +4,14 @@ import { useApp } from '../hooks/useApp';
 import { wordService } from '../api/services';
 import { Loading } from '../components/Loading';
 import { ArrowLeft, Shield, User, Sword, Check, Key, AlertCircle, RefreshCw } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function PlayerRevealScreen() {
   const { gameId, playerId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const { addNotification } = useApp();
+  const { t } = useTranslation();
   const { roundData, players, words: wordsFromState } = location.state || {};
   
   const [loading, setLoading] = useState(true);
@@ -21,13 +23,12 @@ export default function PlayerRevealScreen() {
 
   const fetchWord = async () => {
     if (!roundData?.word_id) {
-      throw new Error('No hay ID de palabra en los datos de la ronda');
+      throw new Error(t('playerReveal.errors.noWordId'));
     }
 
     console.log('Buscando palabra con ID:', roundData.word_id);
     console.log('WordsFromState:', wordsFromState);
 
-    // 1. Buscar en wordsFromState (si viene de PlayRound)
     if (wordsFromState && Array.isArray(wordsFromState)) {
       const foundWord = wordsFromState.find(w => w.id === roundData.word_id);
       if (foundWord) {
@@ -37,10 +38,8 @@ export default function PlayerRevealScreen() {
       console.log('Palabra NO encontrada en wordsFromState');
     }
 
-    // 2. Intentar desde la API (si el método existe)
     try {
       console.log('Buscando palabra en API...');
-      // Verificar si el método existe antes de llamarlo
       if (wordService.getWordById && typeof wordService.getWordById === 'function') {
         const response = await wordService.getWordById(roundData.word_id);
         if (response.data) {
@@ -54,22 +53,21 @@ export default function PlayerRevealScreen() {
       console.error('Error al obtener palabra de API:', apiError);
     }
 
-    // 3. Si llegamos aquí, no se encontró la palabra
-    throw new Error(`No se pudo encontrar la palabra con ID: ${roundData.word_id}`);
+    throw new Error(t('playerReveal.errors.wordNotFound', { id: roundData.word_id }));
   };
 
   useEffect(() => {
     const loadData = async () => {
       try {
         if (!roundData || !players) {
-          addNotification('Datos incompletos de la ronda', 'error');
+          addNotification(t('playerReveal.errors.incompleteData'), 'error');
           setTimeout(() => navigate(`/game/${gameId}`), 2000);
           return;
         }
 
         const currentPlayer = players.find(p => p.id === parseInt(playerId));
         if (!currentPlayer) {
-          addNotification('Jugador no encontrado', 'error');
+          addNotification(t('playerReveal.errors.playerNotFound'), 'error');
           navigate(`/game/${gameId}/play`, { 
             state: { 
               ...location.state, 
@@ -81,13 +79,11 @@ export default function PlayerRevealScreen() {
 
         setPlayer(currentPlayer);
         
-        // Verificar si es el impostor
         const impostor = roundData.impostor_player_id === currentPlayer.id;
         setIsImpostor(impostor);
 
         console.log('Jugador:', currentPlayer.name, 'Es impostor:', impostor);
 
-        // Solo buscar palabra si NO es impostor
         if (!impostor) {
           try {
             console.log('Buscando palabra para jugador no impostor');
@@ -97,22 +93,20 @@ export default function PlayerRevealScreen() {
             console.log('Palabra establecida:', fetchedWord);
           } catch (wordError) {
             console.error('Error al cargar palabra:', wordError);
-            setError(`No se pudo cargar la palabra: ${wordError.message}`);
+            setError(t('playerReveal.errors.wordLoadError', { error: wordError.message }));
             
-            // Si tenemos word_text en roundData, usarlo
             if (roundData.word_text) {
               console.log('Usando word_text de roundData:', roundData.word_text);
               setWord({ 
                 id: roundData.word_id,
                 text: roundData.word_text,
-                note: "Palabra de la ronda actual"
+                note: t('playerReveal.wordFromRoundData')
               });
             } else {
-              // Aún así, mostrar una palabra de ejemplo para que no falle la UI
               setWord({ 
                 id: roundData.word_id,
-                text: "Palabra secreta",
-                note: "La palabra se cargará durante el juego"
+                text: t('playerReveal.secretWord'),
+                note: t('playerReveal.wordWillLoadDuringGame')
               });
             }
           }
@@ -122,15 +116,15 @@ export default function PlayerRevealScreen() {
 
       } catch (error) {
         console.error('Error general cargando datos:', error);
-        setError('Error al cargar los datos del jugador');
-        addNotification('Error al cargar la información', 'error');
+        setError(t('playerReveal.errors.generalLoadError'));
+        addNotification(t('playerReveal.errors.infoLoadError'), 'error');
       } finally {
         setLoading(false);
       }
     };
 
     loadData();
-  }, [roundData, players, playerId, gameId, navigate, addNotification, location.state, retryCount]);
+  }, [roundData, players, playerId, gameId, navigate, addNotification, location.state, retryCount, t]);
 
   const handleBack = () => {
     navigate(`/game/${gameId}/play`, { 
@@ -157,7 +151,7 @@ export default function PlayerRevealScreen() {
           className="flex items-center gap-2 px-4 py-2 mb-8 bg-white/5 hover:bg-white/10 rounded-xl text-white transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
-          Volver al juego
+          {t('playerReveal.backToGame')}
         </button>
 
         <div className="text-center mb-8">
@@ -169,7 +163,7 @@ export default function PlayerRevealScreen() {
             {player?.name?.charAt(0) || '?'}
           </div>
           <h2 className="text-2xl font-bold text-white">{player?.name}</h2>
-          <p className="text-gray-400">Este es tu rol secreto</p>
+          <p className="text-gray-400">{t('playerReveal.yourSecretRole')}</p>
         </div>
 
         {error && (
@@ -184,7 +178,7 @@ export default function PlayerRevealScreen() {
                 className="flex items-center gap-2 px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-lg text-sm"
               >
                 <RefreshCw className="w-4 h-4" />
-                Reintentar
+                {t('playerReveal.retry')}
               </button>
             </div>
           </div>
@@ -211,45 +205,64 @@ export default function PlayerRevealScreen() {
             <div className="text-center w-full">
               {isImpostor ? (
                 <>
-                  <h3 className="text-3xl font-bold text-rose-300 mb-4">¡ERES EL IMPOSTOR!</h3>
+                  <h3 className="text-3xl font-bold text-rose-300 mb-4">
+                    {t('playerReveal.youAreTheImpostor')}
+                  </h3>
                   
                   <div className="bg-rose-500/20 border border-rose-500/30 rounded-xl p-6 mb-6">
                     <div className="flex items-center justify-center gap-3 mb-4">
                       <User className="w-6 h-6 text-rose-300" />
-                      <span className="text-lg font-bold text-rose-300">Tu identidad secreta</span>
+                      <span className="text-lg font-bold text-rose-300">
+                        {t('playerReveal.yourSecretIdentity')}
+                      </span>
                     </div>
                     <p className="text-gray-300">
-                      Solo tú sabes que eres el impostor. Los demás ven una palabra que tú <span className="font-bold text-rose-300">NO conoces</span>.
+                      {t('playerReveal.onlyYouKnow')}{' '}
+                      <span className="font-bold text-rose-300">
+                        {t('playerReveal.doNotKnow')}
+                      </span>.
                     </p>
                   </div>
                   
                   <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
-                    <h4 className="text-lg font-bold text-white mb-3">Tu misión:</h4>
+                    <h4 className="text-lg font-bold text-white mb-3">
+                      {t('playerReveal.yourMission')}:
+                    </h4>
                     <ul className="text-gray-300 space-y-2 text-left">
                       <li className="flex items-start gap-2">
                         <div className="w-2 h-2 bg-rose-500 rounded-full mt-2"></div>
-                        <span><span className="font-bold">Engaña</span> a los demás haciéndoles creer que conoces la palabra</span>
+                        <span>
+                          <span className="font-bold">{t('playerReveal.deceive')}</span>{' '}
+                          {t('playerReveal.deceiveDescription')}
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <div className="w-2 h-2 bg-rose-500 rounded-full mt-2"></div>
-                        <span><span className="font-bold">Adivina</span> o descubre cuál es la palabra real</span>
+                        <span>
+                          <span className="font-bold">{t('playerReveal.guess')}</span>{' '}
+                          {t('playerReveal.guessDescription')}
+                        </span>
                       </li>
                     </ul>
                   </div>
                 </>
               ) : (
                 <>
-                  <h3 className="text-xl font-bold text-white mb-6">La palabra secreta es:</h3>
+                  <h3 className="text-xl font-bold text-white mb-6">
+                    {t('playerReveal.secretWordIs')}:
+                  </h3>
                   
                   <div className="relative mb-6">
                     <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl blur opacity-30"></div>
                     <div className="relative bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border-2 border-emerald-500/30 rounded-2xl p-8">
                       <div className="flex items-center justify-center gap-3 mb-4">
                         <Key className="w-8 h-8 text-emerald-300" />
-                        <span className="text-lg font-bold text-emerald-300">Palabra secreta</span>
+                        <span className="text-lg font-bold text-emerald-300">
+                          {t('playerReveal.secretWord')}
+                        </span>
                       </div>
                       <p className="text-5xl font-bold text-emerald-300 mb-3">
-                        {word?.text || "Cargando..."}
+                        {word?.text || t('common.loading')}
                       </p>
                       {word?.note && (
                         <p className="text-amber-300 text-sm italic mb-2">
@@ -257,16 +270,21 @@ export default function PlayerRevealScreen() {
                         </p>
                       )}
                       <p className="text-emerald-200 text-sm">
-                        Todos los jugadores (excepto el impostor) ven esta misma palabra
+                        {t('playerReveal.allPlayersSeeSameWord')}
                       </p>
                     </div>
                   </div>
                   
                   <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-5">
-                    <h4 className="text-lg font-bold text-blue-300 mb-3">Tu misión:</h4>
+                    <h4 className="text-lg font-bold text-blue-300 mb-3">
+                      {t('playerReveal.yourMission')}:
+                    </h4>
                     <p className="text-gray-300">
-                      Descubrir quién es el impostor <span className="font-bold text-blue-300">sin decir la palabra directamente</span>.
-                      El impostor intentará engañaros y adivinar la palabra.
+                      {t('playerReveal.discoverImpostor')}{' '}
+                      <span className="font-bold text-blue-300">
+                        {t('playerReveal.withoutSayingWord')}
+                      </span>.
+                      {t('playerReveal.impostorWillTry')}
                     </p>
                   </div>
                 </>
@@ -282,7 +300,7 @@ export default function PlayerRevealScreen() {
               }`}
             >
               <Check className="w-5 h-5" />
-              Entendido, volver al juego
+              {t('playerReveal.understoodBackToGame')}
             </button>
           </div>
         </div>

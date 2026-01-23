@@ -24,9 +24,14 @@ class AuthController extends Controller
             'language' => $validated['language'] ?? 'ca',
         ]);
 
-        $token = $user->createToken('api-token')->plainTextToken;
 
-        return response()->json(compact('user', 'token'), 201);
+        $user->sendEmailVerificationNotification();
+
+        return response()->json([
+            'message' => 'User created. Check your email to verify your account.',
+            'user' => $user
+        ]);
+
     }
 
     public function login(Request $request)
@@ -46,6 +51,12 @@ class AuthController extends Controller
 
         if (!$user->is_active) {
             return response()->json(['message' => 'Account disabled'], 403);
+        }
+
+        if (!$user->hasVerifiedEmail()){
+            return response()->json([
+                'message' => 'Email not verified. Please check yor inbox.',
+            ], 403);
         }
 
         $token = $user->createToken('api-token')->plainTextToken;

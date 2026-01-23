@@ -1,14 +1,15 @@
-// src/components/Header.jsx (MODIFICADO)
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import { useNavigate, NavLink, useLocation } from "react-router-dom";
 import { LogOut, Moon, Sun, Grid, Gamepad2, Shield } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useTranslation } from 'react-i18next';
 
 export function Header() {
   const { user, logout, theme, toggleTheme } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   const hiddenRoutes = [
     "/login",
@@ -41,7 +42,6 @@ export function Header() {
     },
   ];
 
-  // Añadir opción de admin si el usuario es admin
   if (user?.role === "admin") {
     navItems.push({
       path: "/admin/users",
@@ -54,7 +54,6 @@ export function Header() {
     <header className="sticky top-0 z-50 backdrop-blur-lg bg-white/5 border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <div className="flex items-center space-x-3">
             <button
               onClick={() => navigate("/categories")}
@@ -69,7 +68,6 @@ export function Header() {
             </button>
           </div>
 
-          {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => (
               <NavLink
@@ -89,13 +87,11 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Right section */}
           <div className="flex items-center space-x-3">
             <LanguageSwitcher />
 
             <div className="h-6 w-px bg-white/10"></div>
 
-            {/* User menu */}
             {user ? (
               <div className="flex items-center space-x-3">
                 <div className="hidden md:flex items-center space-x-2">
@@ -123,7 +119,7 @@ export function Header() {
                   className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-sm font-medium text-white transition-all"
                 >
                   <LogOut className="w-4 h-4" />
-                  <span className="hidden md:inline">Salir</span>
+                  <span className="hidden md:inline">{t('nav.logout')}</span>
                 </button>
               </div>
             ) : (

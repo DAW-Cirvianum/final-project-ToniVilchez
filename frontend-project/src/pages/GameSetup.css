@@ -1,4 +1,3 @@
-/* Estilos para GameSetup */
 .game-setup-container {
   min-height: 100vh;
   display: flex;
@@ -78,7 +77,6 @@
   font-size: 0.85rem;
 }
 
-/* Lista de jugadores con drag-drop */
 .players-list {
   display: flex;
   flex-direction: column;
@@ -96,7 +94,6 @@
   background-color: #f1f3ff;
 }
 
-/* Ítem de jugador */
 .player-item {
   display: flex;
   align-items: center;
@@ -162,7 +159,6 @@
   transform: scale(1.2);
 }
 
-/* Botones */
 .btn {
   padding: 12px 24px;
   border-radius: 6px;
@@ -207,7 +203,6 @@
   cursor: not-allowed;
 }
 
-/* Info dragdrop */
 .drag-drop-info {
   padding: 12px;
   background-color: #fef3c7;
@@ -218,7 +213,6 @@
   margin: 10px 0;
 }
 
-/* Responsive */
 @media (max-width: 480px) {
   .game-setup-card {
     padding: 30px 20px;

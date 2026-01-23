@@ -9,20 +9,101 @@
     "register": "Registrarse",
     "logout": "Cerrar Sesión",
     "categories": "Categorías",
-    "games": "Juegos"
+    "games": "Juegos",
+    "emailUser": "Correo o Usuario",
+    "subtitle": "Aprende palabras jugando"
   },
   "auth": {
     "login": "Iniciar Sesión",
     "register": "Registrarse",
     "email": "Email",
     "username": "Nombre de Usuario",
+    "fullName": "Nombre Completo",
     "password": "Contraseña",
     "confirmPassword": "Confirmar Contraseña",
     "rememberMe": "Recuérdame",
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "noAccount": "¿No tienes cuenta?",
     "haveAccount": "¿Ya tienes cuenta?",
-    "language": "Idioma"
+    "language": "Idioma",
+    "subtitle": "Aprende palabras jugando",
+    "emailPlaceholder": "admin@admin.com",
+    "namePlaceholder": "Tu nombre",
+    "usernamePlaceholder": "tu_usuario",
+    "passwordPlaceholder": "••••••",
+    "confirmPasswordPlaceholder": "••••••",
+    "registerSubtitle": "Únete a la comunidad",
+    "acceptTerms": "Acepto los términos de servicio",
+    "loggingIn": "Iniciando sesión...",
+    "registerHere": "Regístrate aquí",
+    "loginHere": "Inicia sesión aquí",
+    "registeringProgress": "Creando cuenta...",
+    "passwordStrength": {
+      "veryWeak": "Muy débil",
+      "weak": "Débil",
+      "normal": "Normal",
+      "strong": "Fuerte",
+      "veryStrong": "Muy fuerte"
+    },
+    "errors": {
+      "loginRequired": "Correo o usuario es requerido",
+      "passwordRequired": "Contraseña es requerida",
+      "usernameRequired": "Nombre de usuario es requerido",
+      "nameRequired": "Nombre es requerido",
+      "nameMinLength": "El nombre debe tener al menos 3 caracteres",
+      "nameMaxLength": "El nombre no puede exceder 50 caracteres",
+      "emailRequired": "Email es requerido",
+      "emailInvalid": "Email no válido",
+      "passwordMinLength": "La contraseña debe tener al menos 6 caracteres",
+      "confirmPasswordRequired": "Confirma la contraseña",
+      "passwordsDontMatch": "Las contraseñas no coinciden",
+      "acceptTerms": "Debes aceptar los términos de servicio",
+      "invalidResetLink": "Link de recuperación inválido o expirado",
+      "invalidVerificationLink": "Link de verificación inválido",
+      "emailNotFound": "No se encontró ninguna cuenta con este email",
+      "invalidData": "Datos inválidos",
+      "tokenExpired": "El token ha expirado",
+      "tokenInvalid": "Token inválido"
+    },
+    "messages": {
+      "completeForm": "Por favor, completa el formulario",
+      "welcome": "¡Bienvenido!",
+      "loginError": "Error en el inicio de sesión",
+      "registerError": "Error en el registro",
+      "registerSuccess": "Cuenta creada exitosamente",
+      "loggingInProgress": "Iniciando sesión...",
+      "registeringProgress": "Registrando...",
+      "resetLinkSent": "Te hemos enviado un email con las instrucciones para restablecer la contraseña.",
+      "resetLinkError": "Error al enviar el link de recuperación",
+      "passwordResetSuccess": "Contraseña restablecida correctamente. Ahora puedes iniciar sesión con tu nueva contraseña.",
+      "passwordResetError": "Error restableciendo la contraseña",
+      "emailVerified": "Email verificado correctamente",
+      "emailVerifyError": "Error verificando email",
+      "checkEmailInstructions": "Revisa tu bandeja de entrada y la carpeta de spam.",
+      "redirectingToLogin": "Redirigiendo a la página de inicio de sesión..."
+    },
+    "forgotPasswordTitle": "Recuperar Contraseña",
+    "forgotPasswordSubtitle": "Introduce tu email para recibir un link de recuperación",
+    "resetPasswordTitle": "Nueva Contraseña",
+    "resetPasswordButton": "Cambiar Contraseña",
+    "sendResetLink": "Enviar Link de Recuperación",
+    "backToLogin": "Volver a Login",
+    "emailVerification": "Verificación de Email",
+    "verifyingEmail": "Verificando email...",
+    "createNewAccount": "Crear nueva cuenta",
+    "newPassword": "Nueva Contraseña",
+    "newPasswordPlaceholder": "Introduce la nueva contraseña",
+    "confirmNewPassword": "Confirma Nueva Contraseña",
+    "confirmNewPasswordPlaceholder": "Confirma la nueva contraseña",
+    "resendVerification": "Reenviar email de verificación",
+    "throttleInfo": "Puedes solicitar un restablecimiento de contraseña cada 60 segundos"
+  },
+  "serverErrors": {
+    "passwords.user": "No se encontró ningún usuario con este email",
+    "passwords.token": "El token de recuperación no es válido",
+    "passwords.throttled": "Has hecho demasiadas solicitudes. Espera unos minutos.",
+    "passwords.reset": "La contraseña se ha restablecido correctamente",
+    "passwords.sent": "Te hemos enviado un email con las instrucciones"
   },
   "common": {
     "loading": "Cargando...",
@@ -38,17 +119,148 @@
     "success": "Éxito",
     "error": "Error",
     "warning": "Advertencia",
-    "info": "Información"
+    "info": "Información",
+    "close": "Cerrar",
+    "yes": "Sí",
+    "no": "No",
+    "confirm": "Confirmar",
+    "create": "Crear",
+    "update": "Actualizar",
+    "saving": "Guardando...",
+    "secretSetup": "Configuración secreta",
+    "secretInformation": "Información Secreta",
+    "selected": "Seleccionada",
+    "notSelected": "No seleccionada",
+    "word": "palabra",
+    "and": " y",
+    "selecting": "Seleccionando...",
+    "backToMenu": "Volver al Menú",
+    "closeNotification": "Cerrar notificación",
+    "processing": "Procesando...",
+    "waitBeforeRetry": "Por favor, espera"
+  },
+  "playerReveal": {
+    "backToGame": "Volver al juego",
+    "yourSecretRole": "Este es tu rol secreto",
+    "retry": "Reintentar",
+    "errors": {
+      "noWordId": "No hay ID de palabra en los datos de la ronda",
+      "wordNotFound": "No se pudo encontrar la palabra con ID: {{id}}",
+      "incompleteData": "Datos incompletos de la ronda",
+      "playerNotFound": "Jugador no encontrado",
+      "wordLoadError": "No se pudo cargar la palabra: {{error}}",
+      "generalLoadError": "Error al cargar los datos del jugador",
+      "infoLoadError": "Error al cargar la información"
+    },
+    "wordFromRoundData": "Palabra de la ronda actual",
+    "secretWord": "Palabra secreta",
+    "wordWillLoadDuringGame": "La palabra se cargará durante el juego",
+    "youAreTheImpostor": "¡ERES EL IMPOSTOR!",
+    "yourSecretIdentity": "Tu identidad secreta",
+    "onlyYouKnow": "Solo tú sabes que eres el impostor. Los demás ven una palabra que tú",
+    "doNotKnow": "NO conoces",
+    "yourMission": "Tu misión",
+    "deceive": "Engaña",
+    "deceiveDescription": "a los demás haciéndoles creer que conoces la palabra",
+    "guess": "Adivina",
+    "guessDescription": "o descubre cuál es la palabra real",
+    "secretWordIs": "La palabra secreta es",
+    "allPlayersSeeSameWord": "Todos los jugadores (excepto el impostor) ven esta misma palabra",
+    "discoverImpostor": "Descubrir quién es el impostor",
+    "withoutSayingWord": "sin decir la palabra directamente",
+    "impostorWillTry": "El impostor intentará engañaros y adivinar la palabra.",
+    "understoodBackToGame": "Entendido, volver al juego"
+  },
+  "home": {
+    "title": "Impostor",
+    "subtitle": "Juega a adivinar quién es el impostor en esta emocionante experiencia social",
+    "startPlaying": "Comenzar a jugar",
+    "createAccount": "Crear cuenta",
+    "features": {
+      "customizable": {
+        "title": "Personalizable",
+        "description": "Crea tus propias categorías y palabras"
+      },
+      "multiplayer": {
+        "title": "Multijugador",
+        "description": "Juega con amigos en tiempo real"
+      },
+      "competitive": {
+        "title": "Competitivo",
+        "description": "Sigue tu progreso y compite"
+      }
+    },
+    "howItWorks": {
+      "title": "¿Cómo funciona?",
+      "description": "En cada ronda, se asigna una palabra secreta a todos los jugadores excepto al impostor. El impostor debe adivinarla haciéndose pasar por uno más, mientras los demás intentan descubrir quién es el impostor.",
+      "step1": "Selecciona categoría",
+      "step2": "Añade jugadores",
+      "step3": "¡Comienza a jugar!"
+    }
   },
   "categories": {
     "title": "Categorías",
+    "subtitle": "Gestiona tus categorías de palabras",
     "create": "Crear Categoría",
+    "search": "Buscando Categorías...",
     "new": "Nueva Categoría",
     "name": "Nombre",
+    "order": "Ordenar por nombre",
     "description": "Descripción",
     "words": "palabras",
     "play": "Jugar",
-    "notFound": "No se encontraron categorías"
+    "notFound": "No se encontraron categorías",
+    "by": "por",
+    "default": "Predeterminada",
+    "viewWords": "Ver palabras",
+    "editTitle": "Editar categoría",
+    "addWordTitle": "Añadir palabra",
+    "setDefaultTitle": "Marcar como predeterminada",
+    "isDefault": "Categoría predeterminada",
+    "deleteTitle": "Eliminar categoría",
+    "createFirst": "Crear primera categoría",
+    "searchTryDifferent": "Intenta con otro término de búsqueda",
+    "noCategoriesAvailable": "No hay categorías disponibles",
+    "adminMode": "Modo Administrador",
+    "adminPermissions": "Puedes editar y eliminar todas las categorías",
+    "sort": {
+      "recent": "Más recientes",
+      "owner": "Mis categorías primero"
+    },
+    "errors": {
+      "nameRequired": "El nombre es requerido",
+      "nameMinLength": "El nombre debe tener al menos 3 caracteres"
+    },
+    "messages": {
+      "createdSuccess": "Categoría creada exitosamente",
+      "createdError": "Error al crear categoría",
+      "updatedSuccess": "Categoría actualizada exitosamente",
+      "updatedError": "Error al actualizar categoría",
+      "setDefaultSuccess": "Categoría marcada como predeterminada",
+      "setDefaultError": "Error al marcar como predeterminada",
+      "deletedSuccess": "Categoría eliminada"
+    },
+    "modal": {
+      "createTitle": "Crear Nueva Categoría",
+      "editTitle": "Editar Categoría",
+      "nameLabel": "Nombre de la categoría",
+      "namePlaceholder": "Ej: Animales, Películas, Comida...",
+      "descriptionLabel": "Descripción (opcional)",
+      "descriptionPlaceholder": "Breve descripción de la categoría...",
+      "setDefault": "Marcar como categoría predeterminada",
+      "createButton": "Crear Categoría",
+      "saveButton": "Guardar Cambios"
+    },
+    "wordsModal": {
+      "title": "Palabras",
+      "noWords": "No hay palabras en esta categoría",
+      "total": "Total"
+    },
+    "deleteModal": {
+      "title": "Confirmar eliminación",
+      "message": "¿Estás seguro de que quieres eliminar esta categoría? Se eliminarán todas sus palabras.",
+      "confirmDelete": "Sí, eliminar"
+    }
   },
   "game": {
     "title": "Juego",
@@ -59,12 +271,325 @@
     "newRound": "Nueva Ronda",
     "start": "Comenzar Juego",
     "impostor": "Impostor",
-    "word": "Palabra"
+    "word": "Palabra",
+    "category": "Categoría",
+    "randomWord": "Palabra Aleatoria",
+    "notFound": "Juego no encontrado",
+    "backToCategories": "Volver a categorías",
+    "matchNumber": "Partida",
+    "uniqueWords": "Palabras únicas",
+    "participants": "participantes",
+    "completed": "completadas",
+    "round": "Ronda",
+    "notAvailable": "N/A",
+    "noRoundsYet": "No hay rondas aún",
+    "startFirstRound": "Comienza la primera ronda para empezar a jugar",
+    "createFirstRound": "Crear Primera Ronda",
+    "startingPlayer": "Comienza",
+    "messages": {
+      "errorLoading": "Error al cargar el juego",
+      "noCategory": "No se puede cargar palabras: categoría no encontrada",
+      "noWordsInCategory": "Esta categoría no tiene palabras. Añade algunas primero.",
+      "noPlayers": "No hay jugadores en este juego.",
+      "errorPreparingRound": "Error al preparar la ronda",
+      "errorCreatingRound": "Error al crear ronda"
+    }
+  },
+  "games": {
+    "title": "Historial de Partidas",
+    "subtitle": "Revisa todas tus partidas y sus rondas",
+    "newGame": "Nueva Partida",
+    "viewGame": "Ver partida",
+    "players": "jugadores",
+    "rounds": "Rondas",
+    "words": "Palabras",
+    "status": "Estado",
+    "completed": "Completada",
+    "inProgress": "En curso",
+    "playedRounds": "Rondas jugadas",
+    "secretWord": "Palabra secreta",
+    "secretImpostor": "Impostor secreto",
+    "noRoundsInGame": "No hay rondas en esta partida aún",
+    "playFirstRound": "Jugar primera ronda",
+    "noGamesHistory": "No hay partidas en tu historial",
+    "startCreatingFirstGame": "Comienza creando tu primera partida",
+    "createFirstGame": "Crear Primera Partida",
+    "unknownDate": "Fecha desconocida",
+    "dateLocale": "es-ES",
+    "noCategory": "Juego sin categoría",
+    "stats": {
+      "games": "Partidas",
+      "totalRounds": "Rondas totales",
+      "uniqueWords": "Palabras únicas",
+      "totalPlayers": "Jugadores totales"
+    },
+    "demo": {
+      "showingDemoData": "Mostrando datos de demostración.",
+      "createRealGame": " Crea una partida real para ver tu historial.",
+      "category1": "Películas",
+      "category2": "Animales",
+      "player1": "Jugador 1",
+      "player2": "Jugador 2",
+      "player3": "Jugador 3",
+      "word1": "TITANIC",
+      "word2": "MATRIX",
+      "word3": "ELEFANTE"
+    },
+    "messages": {
+      "errorLoading": "Error al cargar historial de juegos"
+    }
+  },
+  "gameSetup": {
+    "title": "Configurar Juego",
+    "subtitle": "Prepara tu partida de Impostor",
+    "selectCategory": "Selecciona una categoría",
+    "chooseCategory": "-- Elige una categoría --",
+    "players": "jugadores",
+    "playerPlaceholder": "Jugador {{number}}",
+    "dragToReorder": "Arrastra para reordenar",
+    "removePlayer": "Eliminar jugador",
+    "dragInstructions": "Arrastra los jugadores para reordenarlos",
+    "startingGame": "Iniciando juego...",
+    "errors": {
+      "categoryRequired": "Debes seleccionar una categoría",
+      "minPlayers": "Se necesitan al menos 2 jugadores",
+      "uniquePlayers": "Los nombres de los jugadores deben ser únicos",
+      "playerMinLength": "El nombre debe tener al menos 2 caracteres",
+      "playerMaxLength": "El nombre es muy largo"
+    },
+    "messages": {
+      "completeForm": "Por favor, completa el formulario correctamente",
+      "gameStarted": "¡Juego iniciado!",
+      "errorStartingGame": "Error al iniciar el juego"
+    }
+  },
+  "playRound": {
+    "title": "Nueva Ronda",
+    "wordsAvailable": "{{count}} palabras disponibles",
+    "loadingWords": "Cargando palabras...",
+    "playersClicked": "{{clicked}}/{{total}} jugadores han hecho clic",
+    "everyoneReady": "¡Todos listos!",
+    "waiting": "Esperando...",
+    "roundReady": "¡Ronda lista para comenzar!",
+    "starterMessage": "{{name}} comenzará la ronda",
+    "startGame": "Comenzar Juego",
+    "newRound": "Nueva Ronda",
+    "noWords": "Sin palabras",
+    "revealImpostor": "Revelar Impostor",
+    "finishRound": "Finalizar Ronda",
+    "alreadyClicked": "Ya has hecho clic en tu botón",
+    "alreadySeen": "Ya has visto tu rol",
+    "clickRegistered": "Clic registrado",
+    "clickToSeeRole": "Haz clic para ver tu rol",
+    "starts": "COMIENZA",
+    "word": "Palabra",
+    "secret": "Secreta",
+    "impostor": "Impostor",
+    "random": "Aleatorio",
+    "impostorWas": "¡El impostor era!",
+    "unknown": "Desconocido",
+    "wasImpostor": "¡Ha sido el impostor!",
+    "saveAndExit": "Guardar y Salir",
+    "gameStart": "¡Que comience el juego! {{name}} comienza.",
+    "impostorRevealed": "¡Impostor revelado!",
+    "missingData": "Error: Faltan datos para crear la ronda",
+    "wordNotFound": "Error: La palabra seleccionada no existe",
+    "roundCreatedLocal": "Ronda creada (local)",
+    "roundCreated": "¡Nueva ronda creada!",
+    "roundSaved": "Ronda guardada en el historial",
+    "roundCompleted": "Ronda completada",
+    "incompleteData": "Datos incompletos de la ronda"
+  },
+  "createRoundModal": {
+    "title": "Crear Nueva Ronda",
+    "selectImpostor": "Selecciona el impostor",
+    "selectWord": "Selecciona una palabra",
+    "selectStarter": "Selecciona quién comienza",
+    "loadingWords": "Cargando palabras...",
+    "noWordsAvailable": "No hay palabras disponibles",
+    "createRound": "Crear Ronda",
+    "creating": "Creando...",
+    "cancel": "Cancelar",
+    "playersWillSeeRole": "Los jugadores verán su rol al hacer clic",
+    "randomlySelected": "Se han seleccionado aleatoriamente:",
+    "clickRandomize": "Haz clic en \"Cambiar Aleatorio\"",
+    "toGenerateNew": "para generar una nueva configuración secreta.",
+    "playersDiscoverRole": "Los jugadores descubrirán su rol al hacer clic en su nombre.",
+    "noWordsOrPlayers": "No hay palabras ni jugadores disponibles",
+    "changeRandom": "Cambiar Aleatorio",
+    "startRound": "Iniciar Ronda",
+    "errors": {
+      "impostorRequired": "Debes seleccionar un impostor",
+      "wordRequired": "Debes seleccionar una palabra"
+    }
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "subtitle": "Gestiona tu información personal y preferencias",
+    "personalInfo": "Información personal",
+    "stats": {
+      "title": "Estadísticas",
+      "gamesPlayed": "Juegos jugados",
+      "categoriesCreated": "Categorías creadas",
+      "memberSince": "Miembro desde"
+    },
+    "fields": {
+      "fullName": "Nombre completo",
+      "preferredLanguage": "Idioma preferido"
+    },
+    "placeholders": {
+      "yourName": "Tu nombre"
+    },
+    "role": {
+      "admin": "Administrador",
+      "user": "Usuario"
+    },
+    "saveChanges": "Guardar cambios",
+    "saveImage": "Guardar imagen",
+    "avatarUpdated": "Imagen de perfil actualizada correctamente",
+    "profileUpdated": "Perfil actualizado correctamente",
+    "preview": "Vista previa",
+    "profilePicture": "Perfil",
+    "user": "Usuario",
+    "errors": {
+      "nameRequired": "El nombre es requerido",
+      "emailRequired": "El email es requerido",
+      "emailInvalid": "Email no válido",
+      "invalidImage": "Por favor selecciona una imagen válida",
+      "imageTooLarge": "La imagen no puede superar los 5MB",
+      "selectImageFirst": "Por favor selecciona una imagen primero",
+      "correctErrors": "Por favor corrige los errores",
+      "updateError": "Error al actualizar el perfil"
+    },
+    "security": {
+      "title": "Seguridad",
+      "changePassword": "Cambiar contraseña",
+      "changePasswordDescription": "Actualiza tu contraseña regularmente para mantener la seguridad",
+      "activeSessions": "Sesiones activas",
+      "activeSessionsDescription": "Gestiona tus sesiones activas en otros dispositivos",
+      "change": "Cambiar",
+      "viewSessions": "Ver sesiones"
+    }
   },
   "messages": {
     "sessionExpired": "Tu sesión ha expirado",
     "error": "Ha ocurrido un error",
     "success": "Operación completada con éxito",
-    "pleaseLogin": "Por favor, inicia sesión"
+    "pleaseLogin": "Por favor, inicia sesión",
+    "errorLoadingCategories": "Error al cargar categorías",
+    "errorLoadingWords": "Error al cargar palabras",
+    "errorLoadingGame": "Error al cargar el juego"
+  },
+  "notifications": {
+    "error": "Error",
+    "success": "Éxito",
+    "warning": "Advertencia",
+    "info": "Información"
+  },
+  "addWordModal": {
+    "title": "Agregar Palabra",
+    "subtitle": "Añade una nueva palabra a esta categoría",
+    "placeholders": {
+      "wordExample": "Ej: Computadora, Sol, Montaña..."
+    },
+    "hint": "La palabra debe ser única dentro de esta categoría.",
+    "addButton": "Agregar Palabra",
+    "adding": "Agregando...",
+    "wordAddedSuccess": "Palabra agregada correctamente",
+    "errors": {
+      "textRequired": "La palabra es requerida",
+      "textMinLength": "La palabra debe tener al menos 2 caracteres",
+      "textMaxLength": "La palabra no puede exceder 50 caracteres",
+      "addError": "Error al agregar palabra"
+    }
+  },
+  "adminUsers": {
+    "title": "Gestión de Usuarios",
+    "subtitle": "Panel de administración",
+    "totalUsers": "Total",
+    "users": "usuarios",
+    "searchPlaceholder": "Buscar por nombre o email...",
+    "loadingUsers": "Cargando usuarios...",
+    "noSearchResults": "No se encontraron usuarios con esa búsqueda",
+    "noUsers": "No hay usuarios registrados",
+    "noName": "Sin nombre",
+    "admin": "ADMIN",
+    "inactive": "INACTIVO",
+    "id": "ID",
+    "registered": "Registrado",
+    "language": "Idioma",
+    "userRole": "Usuario",
+    "adminRole": "Administrador",
+    "deleteUser": "Eliminar usuario",
+    "importantInfo": "Información importante",
+    "info": {
+      "adminOnly": "Solo visible para usuarios con rol de administrador",
+      "cannotChangeOwnRole": "No puedes cambiar tu propio rol",
+      "cannotDeleteSelf": "No puedes eliminarte a ti mismo",
+      "immediateChanges": "Los cambios se aplican inmediatamente"
+    },
+    "roleUpdated": "Rol actualizado",
+    "userDeleted": "Usuario eliminado",
+    "confirmDelete": "¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.",
+    "errors": {
+      "loadUsers": "Error al cargar usuarios",
+      "serverError": "Error de conexión con el servidor",
+      "updateError": "Error al actualizar",
+      "updateRoleError": "Error al actualizar rol",
+      "deleteError": "Error al eliminar",
+      "deleteUserError": "Error al eliminar usuario"
+    }
+  },
+  "languageSwitcher": {
+    "changeTo": "Cambiar a",
+    "warnings": {
+      "corsWarning": "No se puede sincronizar idioma (quizás CORS)",
+      "syncError": "Error sincronizando idioma, pero funciona localmente"
+    },
+    "errors": {
+      "changeError": "Error cambiando idioma:"
+    }
+  },
+  "errorBoundary": {
+    "title": "Algo salió mal",
+    "unexpectedError": "Ha ocurrido un error inesperado",
+    "retry": "Reintentar",
+    "goHome": "Volver al inicio",
+    "errorCaptured": "Error capturado:"
+  },
+  "confirmModal": {
+    "types": {
+      "warning": "Advertencia",
+      "danger": "Peligro",
+      "info": "Información"
+    }
+  },
+  "adminWordManager": {
+    "title": "Gestión de Palabras",
+    "categoryLabel": "Categoría",
+    "addNewWord": "Añadir nueva palabra",
+    "noWords": "No hay palabras en esta categoría",
+    "totalWords": "Total",
+    "placeholders": {
+      "newWord": "Escribe una nueva palabra..."
+    },
+    "tooltips": {
+      "editWord": "Editar palabra",
+      "deleteWord": "Eliminar palabra"
+    },
+    "confirmations": {
+      "deleteWord": "¿Estás seguro de eliminar esta palabra?"
+    },
+    "messages": {
+      "wordAdded": "Palabra añadida correctamente",
+      "wordUpdated": "Palabra actualizada correctamente",
+      "wordDeleted": "Palabra eliminada correctamente"
+    },
+    "errors": {
+      "loadWords": "Error al cargar palabras",
+      "addWord": "Error al añadir palabra",
+      "updateWord": "Error al actualizar palabra",
+      "deleteWord": "Error al eliminar palabra"
+    }
   }
 }

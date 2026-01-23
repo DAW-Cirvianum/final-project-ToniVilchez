@@ -8,7 +8,9 @@ use App\Http\Controllers\RoundController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\WordController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RecoveryController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Middleware\AdminMiddleware;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -16,6 +18,14 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::post('/forgot-password', [PasswordResetController::class, 'send']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
+
+Route::get('/email/verify/{id}/{hash}', [RecoveryController::class, 'verifyEmail'])
+    ->middleware(['signed'])
+    ->name('verification.verify');
+    
+Route::post('/email/resend', [RecoveryController::class, 'resendVerification'])
+    ->middleware('auth:sanctum');
+
 
 Route::get('/sanctum/csrf-cookie', function () {
     return response()->json(['csrf_token' => csrf_token()]);
@@ -50,40 +60,38 @@ Route::match(['options', 'post'], '/set-locale', function (\Illuminate\Http\Requ
       ->header('Access-Control-Allow-Credentials', 'true');
 });
 
-Route::match(['options', 'get'], '/current-locale', function (\Illuminate\Http\Request $request) {
-    if ($request->isMethod('options')) {
-        return response('', 200)
-            ->header('Access-Control-Allow-Origin', $request->header('Origin') ?? 'http://localhost:5174')
-            ->header('Access-Control-Allow-Methods', 'GET, OPTIONS')
-            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept')
-            ->header('Access-Control-Allow-Credentials', 'true');
-    }
-    
-    $locale = $request->cookie('app_locale') ?? 
-              ($request->user() ? $request->user()->language : null) ?? 
-              config('app.locale');
-    
-    return response()->json([
-        'locale' => $locale,
-        'available' => ['ca', 'es', 'en']
-    ])->header('Access-Control-Allow-Origin', $request->header('Origin') ?? 'http://localhost:5174')
-      ->header('Access-Control-Allow-Credentials', 'true');
-});
-
 Route::get('/current-locale', function (\Illuminate\Http\Request $request) {
-    $cookieLocale = $request->cookie('app_locale');
-    
-    $userLocale = $request->user() ? $request->user()->language : null;
-    
-    $browserLocale = $request->getPreferredLanguage(['ca', 'es', 'en']);
-    
-    $locale = $cookieLocale ?? $userLocale ?? $browserLocale ?? config('app.locale');
-    
-    return response()->json([
-        'locale' => $locale,
-        'source' => $cookieLocale ? 'cookie' : ($userLocale ? 'user' : ($browserLocale ? 'browser' : 'config')),
-        'available' => ['ca', 'es', 'en']
-    ]);
+    try {
+        \Log::info('Current locale endpoint called', [
+            'cookies' => $request->cookie(),
+            'user' => $request->user() ? $request->user()->id : 'guest'
+        ]);
+        
+        $cookieLocale = $request->cookie('app_locale');
+        
+        $locale = $cookieLocale ?: 'ca';
+        
+        if (!in_array($locale, ['ca', 'es', 'en'])) {
+            $locale = 'ca';
+        }
+        
+        return response()->json([
+            'locale' => $locale,
+            'available' => ['ca', 'es', 'en'],
+            'fallback_locale' => 'ca',
+            'success' => true
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('Error in current-locale endpoint: ' . $e->getMessage());
+        
+        return response()->json([
+            'locale' => 'ca',
+            'available' => ['ca', 'es', 'en'],
+            'fallback_locale' => 'ca',
+            'success' => false,
+            'error' => 'Server error'
+        ], 500);
+    }
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -138,7 +146,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 });
 
-Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth:sanctum', AdminMiddleware::class])->prefix('admin')->group(function () {
     
     Route::get('/users', [AdminController::class, 'getUsers']);
     Route::get('/users/{user}', [AdminController::class, 'showUser']);
@@ -170,6 +178,7 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     
     Route::post('/backup', [AdminController::class, 'createBackup']);
     Route::post('/maintenance/cleanup', [AdminController::class, 'cleanupOldData']);
+
 });
 
 if (config('app.env') !== 'production') {

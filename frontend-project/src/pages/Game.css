@@ -1,4 +1,3 @@
-/* Estilos para Game */
 .game-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -41,7 +40,6 @@
   background-color: #d1d5db;
 }
 
-/* Grid de paneles */
 .game-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -49,7 +47,6 @@
   margin-bottom: 40px;
 }
 
-/* Panel */
 .game-panel {
   background: white;
   border-radius: 12px;
@@ -72,7 +69,6 @@
   color: #1f2937;
 }
 
-/* Grid de jugadores */
 .players-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -129,7 +125,6 @@
   background-color: #ef4444;
 }
 
-/* Lista de rondas */
 .rounds-list {
   display: flex;
   flex-direction: column;
@@ -177,7 +172,6 @@
   font-weight: 600;
 }
 
-/* Mensaje vacío */
 .empty-message {
   text-align: center;
   padding: 30px 20px;
@@ -189,7 +183,6 @@
   font-size: 1rem;
 }
 
-/* Error */
 .game-error {
   display: flex;
   flex-direction: column;
@@ -205,7 +198,6 @@
   margin: 0;
 }
 
-/* Botones */
 .btn {
   padding: 12px 24px;
   border-radius: 6px;
@@ -230,7 +222,6 @@
   width: 100%;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .game-container {
     padding: 20px 15px;

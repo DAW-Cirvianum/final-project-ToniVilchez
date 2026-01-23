@@ -1,4 +1,4 @@
-/* Estilos para Home */
+
 .home {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -143,7 +143,6 @@
   opacity: 0.9;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .home__header h1 {
     font-size: 2.5rem;

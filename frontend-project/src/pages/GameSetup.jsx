@@ -4,10 +4,12 @@ import { useApp } from '../hooks/useApp';
 import { gameService, categoryService } from '../api/services';
 import { Loading } from '../components/Loading';
 import { Users, Settings, Plus, X, GripVertical, ArrowRight, ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function GameSetup() {
   const navigate = useNavigate();
   const { addNotification } = useApp();
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
 
   const [categories, setCategories] = useState([]);
@@ -34,7 +36,7 @@ export default function GameSetup() {
       const response = await categoryService.getAll();
       setCategories(response.data.data || []);
     } catch (error) {
-      addNotification('Error al cargar categorías', 'error');
+      addNotification(t('messages.errorLoadingCategories'), 'error');
     } finally {
       setLoading(false);
     }
@@ -44,25 +46,25 @@ export default function GameSetup() {
     const newErrors = {};
 
     if (!selectedCategory) {
-      newErrors.category = 'Debes seleccionar una categoría';
+      newErrors.category = t('gameSetup.errors.categoryRequired');
     }
 
     const validPlayers = players.filter(p => p.trim());
     if (validPlayers.length < 2) {
-      newErrors.players = 'Se necesitan al menos 2 jugadores';
+      newErrors.players = t('gameSetup.errors.minPlayers');
     }
 
     const uniquePlayers = new Set(validPlayers.map(p => p.trim().toLowerCase()));
     if (uniquePlayers.size !== validPlayers.length) {
-      newErrors.uniquePlayers = 'Los nombres de los jugadores deben ser únicos';
+      newErrors.uniquePlayers = t('gameSetup.errors.uniquePlayers');
     }
 
     players.forEach((player, idx) => {
       if (player.trim() && player.length < 2) {
-        newErrors[`player_${idx}`] = 'El nombre debe tener al menos 2 caracteres';
+        newErrors[`player_${idx}`] = t('gameSetup.errors.playerMinLength');
       }
       if (player.length > 30) {
-        newErrors[`player_${idx}`] = 'El nombre es muy largo';
+        newErrors[`player_${idx}`] = t('gameSetup.errors.playerMaxLength');
       }
     });
 
@@ -117,7 +119,7 @@ export default function GameSetup() {
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      addNotification('Por favor, completa el formulario correctamente', 'error');
+      addNotification(t('gameSetup.messages.completeForm'), 'error');
       return;
     }
 
@@ -129,10 +131,10 @@ export default function GameSetup() {
         players: validPlayers,
       });
 
-      addNotification('¡Juego iniciado!', 'success');
+      addNotification(t('gameSetup.messages.gameStarted'), 'success');
       navigate(`/game/${response.data.data.id}`);
     } catch (error) {
-      addNotification('Error al iniciar el juego', 'error');
+      addNotification(t('gameSetup.messages.errorStartingGame'), 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -146,20 +148,20 @@ export default function GameSetup() {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
         <div className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 p-8 shadow-2xl">
-          {/* Header */}
           <div className="text-center mb-10">
             <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <Settings className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-3">🎮 Configurar Juego</h1>
-            <p className="text-gray-400">Prepara tu partida de Impostor</p>
+            <h1 className="text-3xl font-bold text-white mb-3">
+              🎮 {t('gameSetup.title')}
+            </h1>
+            <p className="text-gray-400">{t('gameSetup.subtitle')}</p>
           </div>
 
           <form onSubmit={handleStartGame} className="space-y-8">
-            {/* Categoría */}
             <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-300">
-                Selecciona una categoría *
+                {t('gameSetup.selectCategory')} *
               </label>
               <div className="relative">
                 <select
@@ -175,10 +177,10 @@ export default function GameSetup() {
                   }`}
                   disabled={isSubmitting}
                 >
-                  <option value="">-- Elige una categoría --</option>
+                  <option value="">{t('gameSetup.chooseCategory')}</option>
                   {categories.map(cat => (
                     <option key={cat.id} value={cat.id}>
-                      {cat.name} ({cat.words_count || 0} palabras)
+                      {cat.name} ({cat.words_count || 0} {t('categories.words')})
                     </option>
                   ))}
                 </select>
@@ -189,14 +191,13 @@ export default function GameSetup() {
               )}
             </div>
 
-            {/* Jugadores */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <label className="block text-sm font-medium text-gray-300">
-                  Jugadores *
+                  {t('game.players')} *
                 </label>
                 <span className="text-sm text-primary-400 font-medium">
-                  {players.filter(p => p.trim()).length} jugadores
+                  {players.filter(p => p.trim()).length} {t('gameSetup.players')}
                 </span>
               </div>
 
@@ -206,7 +207,6 @@ export default function GameSetup() {
                 </span>
               )}
 
-              {/* Lista de jugadores */}
               <div className="space-y-3">
                 {players.map((player, index) => (
                   <div
@@ -224,7 +224,7 @@ export default function GameSetup() {
                     <button
                       type="button"
                       className="text-gray-400 hover:text-white cursor-grab active:cursor-grabbing"
-                      title="Arrastrar para reordenar"
+                      title={t('gameSetup.dragToReorder')}
                     >
                       <GripVertical className="w-5 h-5" />
                     </button>
@@ -234,7 +234,7 @@ export default function GameSetup() {
                         type="text"
                         value={player}
                         onChange={(e) => updatePlayer(index, e.target.value)}
-                        placeholder={`Jugador ${index + 1}`}
+                        placeholder={t('gameSetup.playerPlaceholder', { number: index + 1 })}
                         className="w-full bg-transparent text-white placeholder-gray-400 focus:outline-none"
                         disabled={isSubmitting}
                       />
@@ -248,7 +248,7 @@ export default function GameSetup() {
                         type="button"
                         onClick={() => removePlayer(index)}
                         className="p-1 text-gray-400 hover:text-rose-400 transition-colors"
-                        aria-label="Eliminar jugador"
+                        aria-label={t('gameSetup.removePlayer')}
                         disabled={isSubmitting}
                       >
                         <X className="w-5 h-5" />
@@ -258,7 +258,6 @@ export default function GameSetup() {
                 ))}
               </div>
 
-              {/* Agregar jugador */}
               <button
                 type="button"
                 onClick={addPlayer}
@@ -266,18 +265,16 @@ export default function GameSetup() {
                 disabled={isSubmitting}
               >
                 <Plus className="w-5 h-5" />
-                Agregar Jugador
+                {t('game.addPlayer')}
               </button>
 
-              {/* Info */}
               <div className="p-4 bg-primary-500/10 border border-primary-500/20 rounded-xl">
                 <p className="text-sm text-primary-300 text-center">
-                  Arrastra los jugadores para reordenarlos
+                  {t('gameSetup.dragInstructions')}
                 </p>
               </div>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
@@ -286,11 +283,11 @@ export default function GameSetup() {
               {isSubmitting ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Iniciando juego...
+                  {t('gameSetup.startingGame')}
                 </>
               ) : (
                 <>
-                  <span>Comenzar Juego</span>
+                  <span>{t('game.start')}</span>
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}

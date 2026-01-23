@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useApp } from '../hooks/useApp';
 import { wordService } from '../api/services';
 import { X, Plus, AlertCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function AddWordModal({ isOpen, onClose, categoryId, onWordAdded }) {
+  const { t } = useTranslation();
   const { addNotification } = useApp();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({ text: '' });
@@ -14,11 +16,11 @@ export default function AddWordModal({ isOpen, onClose, categoryId, onWordAdded 
   const validateForm = () => {
     const newErrors = {};
     if (!formData.text.trim()) {
-      newErrors.text = 'La palabra es requerida';
+      newErrors.text = t('addWordModal.errors.textRequired', 'La palabra es requerida');
     } else if (formData.text.length < 2) {
-      newErrors.text = 'La palabra debe tener al menos 2 caracteres';
+      newErrors.text = t('addWordModal.errors.textMinLength', 'La palabra debe tener al menos 2 caracteres');
     } else if (formData.text.length > 50) {
-      newErrors.text = 'La palabra no puede exceder 50 caracteres';
+      newErrors.text = t('addWordModal.errors.textMaxLength', 'La palabra no puede exceder 50 caracteres');
     }
     return newErrors;
   };
@@ -35,12 +37,12 @@ export default function AddWordModal({ isOpen, onClose, categoryId, onWordAdded 
     setIsLoading(true);
     try {
       await wordService.create(categoryId, { text: formData.text });
-      addNotification('Palabra agregada correctamente', 'success');
+      addNotification(t('addWordModal.wordAddedSuccess', 'Palabra agregada correctamente'), 'success');
       setFormData({ text: '' });
       setErrors({});
       onWordAdded?.();
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Error al agregar palabra';
+      const errorMessage = error.response?.data?.message || t('addWordModal.errors.addError', 'Error al agregar palabra');
       addNotification(errorMessage, 'error');
       if (error.response?.data?.errors) {
         setErrors(error.response.data.errors);
@@ -59,11 +61,14 @@ export default function AddWordModal({ isOpen, onClose, categoryId, onWordAdded 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <div className="bg-slate-900 rounded-2xl border border-slate-700 w-full max-w-md overflow-hidden">
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-700">
           <div>
-            <h3 className="text-xl font-bold text-white">Agregar Palabra</h3>
-            <p className="text-gray-400 text-sm">Añade una nueva palabra a esta categoría</p>
+            <h3 className="text-xl font-bold text-white">
+              {t('addWordModal.title', 'Agregar Palabra')}
+            </h3>
+            <p className="text-gray-400 text-sm">
+              {t('addWordModal.subtitle', 'Añade una nueva palabra a esta categoría')}
+            </p>
           </div>
           <button
             onClick={handleClose}
@@ -74,12 +79,11 @@ export default function AddWordModal({ isOpen, onClose, categoryId, onWordAdded 
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-6">
           <div className="space-y-4">
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-300">
-                Palabra *
+                {t('common.word', 'Palabra')} *
               </label>
               <input
                 type="text"
@@ -93,7 +97,7 @@ export default function AddWordModal({ isOpen, onClose, categoryId, onWordAdded 
                     ? 'border-rose-500 focus:border-rose-400'
                     : 'border-slate-700 focus:border-primary-500'
                 }`}
-                placeholder="Ej: Computadora, Sol, Montaña..."
+                placeholder={t('addWordModal.placeholders.wordExample', 'Ej: Computadora, Sol, Montaña...')}
                 disabled={isLoading}
                 autoFocus
               />
@@ -104,12 +108,11 @@ export default function AddWordModal({ isOpen, onClose, categoryId, onWordAdded 
                 </p>
               )}
               <p className="text-gray-400 text-xs">
-                La palabra debe ser única dentro de esta categoría.
+                {t('addWordModal.hint', 'La palabra debe ser única dentro de esta categoría.')}
               </p>
             </div>
           </div>
 
-          {/* Actions */}
           <div className="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-slate-700">
             <button
               type="button"
@@ -117,7 +120,7 @@ export default function AddWordModal({ isOpen, onClose, categoryId, onWordAdded 
               className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-medium transition-colors"
               disabled={isLoading}
             >
-              Cancelar
+              {t('common.cancel', 'Cancelar')}
             </button>
             <button
               type="submit"
@@ -127,12 +130,12 @@ export default function AddWordModal({ isOpen, onClose, categoryId, onWordAdded 
               {isLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Agregando...
+                  {t('addWordModal.adding', 'Agregando...')}
                 </>
               ) : (
                 <>
                   <Plus className="w-4 h-4" />
-                  Agregar Palabra
+                  {t('addWordModal.addButton', 'Agregar Palabra')}
                 </>
               )}
             </button>

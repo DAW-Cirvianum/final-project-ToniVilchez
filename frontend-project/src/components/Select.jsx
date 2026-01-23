@@ -32,7 +32,6 @@ export function Select({
   );
 }
 
-// Opció per a selects més petits
 export function SelectSmall({ 
   value, 
   onChange, 

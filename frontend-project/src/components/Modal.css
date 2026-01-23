@@ -1,4 +1,3 @@
-/* Estilos para Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -97,7 +96,6 @@
   background-color: #f3f4f6;
 }
 
-/* Responsive */
 @media (max-width: 640px) {
   .modal {
     width: 95%;

@@ -88,7 +88,7 @@ export function AppProvider({ children }) {
     setIsLoading,
     login,
     logout,
-    updateUser, // <-- Añadido
+    updateUser,
   };
 
   return (

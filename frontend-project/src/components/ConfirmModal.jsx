@@ -1,16 +1,23 @@
 import { AlertTriangle, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export function ConfirmModal({ 
   isOpen, 
   title, 
   message, 
-  confirmText = "Confirmar", 
-  cancelText = "Cancelar",
+  confirmText, 
+  cancelText,
   type = "warning", 
   onConfirm, 
   onCancel,
   isLoading = false 
 }) {
+  const { t } = useTranslation();
+
+  const defaultConfirmText = t('common.confirm');
+  const defaultCancelText = t('common.cancel');
+  const defaultProcessingText = t('common.processing');
+
   if (!isOpen) return null;
 
   const colors = {
@@ -25,44 +32,59 @@ export function ConfirmModal({
     info: <AlertTriangle className="w-6 h-6 text-blue-400" />,
   };
 
+  const getTypeText = () => {
+    const types = {
+      warning: t('confirmModal.types.warning'),
+      danger: t('confirmModal.types.danger'),
+      info: t('confirmModal.types.info'),
+    };
+    return types[type] || type;
+  };
+
   return (
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
       onClick={onCancel}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirm-modal-title"
+      aria-describedby="confirm-modal-message"
     >
       <div 
         className="relative w-full max-w-md bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl shadow-2xl animate-scale-in"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <div className="flex items-center gap-3">
             {icons[type]}
-            <h2 className="text-xl font-bold text-white">{title}</h2>
+            <h2 id="confirm-modal-title" className="text-xl font-bold text-white">
+              {title}
+            </h2>
+            <span className="sr-only">{getTypeText()}</span>
           </div>
           <button
             onClick={onCancel}
             className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-            aria-label="Cerrar"
+            aria-label={t('common.close')}
             disabled={isLoading}
           >
             <X className="w-5 h-5 text-gray-400" />
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6">
-          <p className="text-gray-300">{message}</p>
+          <p id="confirm-modal-message" className="text-gray-300">
+            {message}
+          </p>
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-end gap-3 p-6 border-t border-white/10">
           <button
             onClick={onCancel}
-            className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-xl font-medium transition-colors"
+            className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-xl font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isLoading}
           >
-            {cancelText}
+            {cancelText || defaultCancelText}
           </button>
           <button
             onClick={onConfirm}
@@ -72,16 +94,17 @@ export function ConfirmModal({
                 : type === 'warning'
                 ? 'bg-amber-500 hover:bg-amber-600'
                 : 'bg-blue-500 hover:bg-blue-600'
-            } text-white rounded-xl font-medium transition-all flex items-center gap-2`}
+            } text-white rounded-xl font-medium transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed`}
             disabled={isLoading}
+            aria-busy={isLoading}
           >
             {isLoading ? (
               <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Procesando...
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true"></div>
+                {defaultProcessingText}
               </>
             ) : (
-              confirmText
+              confirmText || defaultConfirmText
             )}
           </button>
         </div>

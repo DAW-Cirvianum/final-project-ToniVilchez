@@ -6,11 +6,13 @@ import { Modal } from '../components/Modal';
 import { Loading } from '../components/Loading';
 import AddWordModal from '../components/AddWordModal';
 import { ConfirmModal } from "../components/ConfirmModal";
-import { Search, Filter, Plus, Play, Trash2, BookOpen, Edit2, List, X, Star, Crown } from 'lucide-react';
+import { Search, Filter, Plus, Play, Trash2, BookOpen, Edit2, List, X, Star, Crown, CheckCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function Categories() {
   const navigate = useNavigate();
   const { addNotification, user } = useApp();
+  const { t } = useTranslation();
   
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,6 +31,7 @@ export default function Categories() {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [deleteType, setDeleteType] = useState('');
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [settingDefault, setSettingDefault] = useState(false);
 
   const isAdmin = user?.role === 'admin';
 
@@ -42,7 +45,7 @@ export default function Categories() {
       const response = await categoryService.getAll();
       setCategories(response.data.data || []);
     } catch (error) {
-      addNotification('Error al cargar categorías', 'error');
+      addNotification(t('messages.errorLoadingCategories'), 'error');
     } finally {
       setLoading(false);
     }
@@ -55,16 +58,16 @@ export default function Categories() {
       setSelectedCategory(response.data.data);
       setShowWordsModal(true);
     } catch (error) {
-      addNotification('Error al cargar palabras', 'error');
+      addNotification(t('messages.errorLoadingWords'), 'error');
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name.trim()) {
-      newErrors.name = 'El nombre es requerido';
+      newErrors.name = t('categories.errors.nameRequired');
     } else if (formData.name.length < 3) {
-      newErrors.name = 'El nombre debe tener al menos 3 caracteres';
+      newErrors.name = t('categories.errors.nameMinLength');
     }
     return newErrors;
   };
@@ -84,13 +87,13 @@ export default function Categories() {
         description: formData.description || null,
       });
       
-      addNotification('Categoría creada exitosamente', 'success');
+      addNotification(t('categories.messages.createdSuccess'), 'success');
       setIsModalOpen(false);
       setFormData({ name: '', description: '' });
       setErrors({});
       await loadCategories();
     } catch (error) {
-      addNotification('Error al crear categoría', 'error');
+      addNotification(t('categories.messages.createdError'), 'error');
     }
   };
 
@@ -99,9 +102,9 @@ export default function Categories() {
 
     const newErrors = {};
     if (!editFormData.name.trim()) {
-      newErrors.name = 'El nombre es requerido';
+      newErrors.name = t('categories.errors.nameRequired');
     } else if (editFormData.name.length < 3) {
-      newErrors.name = 'El nombre debe tener al menos 3 caracteres';
+      newErrors.name = t('categories.errors.nameMinLength');
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -115,13 +118,28 @@ export default function Categories() {
         description: editFormData.description || null,
       });
       
-      addNotification('Categoría actualizada exitosamente', 'success');
+      addNotification(t('categories.messages.updatedSuccess'), 'success');
       setIsEditModalOpen(false);
       setEditFormData({ name: '', description: '' });
       setErrors({});
       await loadCategories();
     } catch (error) {
-      addNotification('Error al actualizar categoría', 'error');
+      addNotification(t('categories.messages.updatedError'), 'error');
+    }
+  };
+
+  const setAsDefault = async (categoryId) => {
+    if (!isAdmin) return;
+    
+    setSettingDefault(true);
+    try {
+      await categoryService.setAsDefault(categoryId);
+      addNotification(t('categories.messages.setDefaultSuccess'), 'success');
+      await loadCategories();
+    } catch (error) {
+      addNotification(t('categories.messages.setDefaultError'), 'error');
+    } finally {
+      setSettingDefault(false);
     }
   };
 
@@ -138,11 +156,11 @@ export default function Categories() {
     try {
       if (deleteType === 'category') {
         await categoryService.delete(itemToDelete);
-        addNotification('Categoría eliminada', 'success');
+        addNotification(t('categories.messages.deletedSuccess'), 'success');
         await loadCategories();
       }
     } catch (error) {
-      addNotification('Error al eliminar', 'error');
+      addNotification(t('messages.error'), 'error');
     } finally {
       setDeleteLoading(false);
       setConfirmModalOpen(false);
@@ -152,7 +170,6 @@ export default function Categories() {
   };
 
   const openEditModal = (category) => {
-    // Solo permitir editar si es admin o es el dueño
     if (!isAdmin && category.user_id !== user?.id) return;
     
     setSelectedCategory(category);
@@ -189,29 +206,27 @@ export default function Categories() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">📚 Categorías</h1>
-            <p className="text-gray-400">Gestiona tus categorías de palabras</p>
+            <h1 className="text-3xl font-bold text-white mb-2">{t('categories.title')}</h1>
+            <p className="text-gray-400">{t('categories.subtitle')}</p>
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
             className="px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-lg font-medium transition-all flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
-            Nueva Categoría
+            {t('categories.new')}
           </button>
         </div>
 
-        {/* Barra de búsqueda y filtros */}
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <div className="flex-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
               <input
                 type="text"
-                placeholder="Buscar categorías..."
+                placeholder={t('categories.search')}
                 value={filterText}
                 onChange={(e) => setFilterText(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-gray-900/50 border border-gray-800 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-primary-500"
@@ -225,39 +240,37 @@ export default function Categories() {
               onChange={(e) => setSortBy(e.target.value)}
               className="px-4 py-3 bg-gray-900/50 border border-gray-800 rounded-xl text-white focus:outline-none focus:border-primary-500"
             >
-              <option value="name">Ordenar por nombre</option>
-              <option value="recent">Más recientes</option>
-              <option value="owner">Mis categorías primero</option>
+              <option value="name">{t('categories.order')}</option>
+              <option value="recent">{t('categories.sort.recent')}</option>
+              <option value="owner">{t('categories.sort.owner')}</option>
             </select>
           </div>
         </div>
 
-        {/* Indicador admin */}
         {isAdmin && (
           <div className="mb-6 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl">
             <div className="flex items-center gap-3">
               <Crown className="w-5 h-5 text-yellow-500" />
               <span className="text-sm text-blue-300">
-                <strong>Modo Administrador:</strong> Puedes editar y eliminar todas las categorías.
+                <strong>{t('categories.adminMode')}:</strong> {t('categories.adminPermissions')}
               </span>
             </div>
           </div>
         )}
 
-        {/* Grid de categorías */}
         {filteredCategories.length === 0 ? (
           <div className="text-center py-16 bg-gray-900/30 rounded-2xl border border-gray-800">
             <BookOpen className="w-16 h-16 mx-auto text-gray-600 mb-4" />
-            <h3 className="text-xl font-medium text-gray-300 mb-2">No se encontraron categorías</h3>
+            <h3 className="text-xl font-medium text-gray-300 mb-2">{t('categories.notFound')}</h3>
             <p className="text-gray-500 mb-6">
-              {filterText ? 'Intenta con otro término de búsqueda' : 'No hay categorías disponibles'}
+              {filterText ? t('categories.searchTryDifferent') : t('categories.noCategoriesAvailable')}
             </p>
             <button
               onClick={() => setIsModalOpen(true)}
               className="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-xl font-medium transition-all inline-flex items-center gap-2"
             >
               <Plus className="w-5 h-5" />
-              Crear primera categoría
+              {t('categories.createFirst')}
             </button>
           </div>
         ) : (
@@ -278,11 +291,10 @@ export default function Categories() {
                   }}
                 >
                   <div className="p-6">
-                    {/* Badge predeterminada */}
                     {isDefault && (
                       <div className="absolute top-4 right-4 bg-yellow-500 text-yellow-950 px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
                         <Star className="w-3 h-3 fill-current" />
-                        Predeterminada
+                        {t('categories.default')}
                       </div>
                     )}
 
@@ -293,55 +305,82 @@ export default function Categories() {
                         </h3>
                         <div className="flex items-center gap-4 text-sm">
                           <span className="text-gray-400">
-                            {category.words_count || 0} palabras
+                            {category.words_count || 0} {t('categories.words')}
                           </span>
                           {category.user && (
                             <span className="text-gray-500">
-                              por {category.user.name}
+                              {t('categories.by')} {category.user.name}
                             </span>
                           )}
                         </div>
                       </div>
-                      
-                      {/* Botones de acción (solo si puede editar) */}
+                    </div>
+
+                    <div className="flex flex-col gap-3">
                       {canEdit && (
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 justify-end">
                           <button
                             onClick={() => openEditModal(category)}
-                            className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
-                            title="Editar categoría"
+                            className="p-1.5 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                            title={t('categories.editTitle')}
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
+                          
+                          <button
+                            onClick={() => openWordModal(category)}
+                            className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors"
+                            title={t('categories.addWordTitle')}
+                          >
+                            <Plus className="w-4 h-4" />
+                          </button>
+                          
+                          {isAdmin && !isDefault && (
+                            <button
+                              onClick={() => setAsDefault(category.id)}
+                              disabled={settingDefault}
+                              className="p-1.5 text-gray-400 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                              title={t('categories.setDefaultTitle')}
+                            >
+                              <Star className="w-4 h-4" />
+                            </button>
+                          )}
+                          
+                          {isAdmin && isDefault && (
+                            <div className="p-1.5 text-yellow-500 bg-yellow-500/10 rounded-lg" title={t('categories.isDefault')}>
+                              <CheckCircle className="w-4 h-4" />
+                            </div>
+                          )}
+                          
                           {!isDefault && (
                             <button
                               onClick={() => openDeleteConfirm(category.id, 'category')}
-                              className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                              title="Eliminar categoría"
+                              className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                              title={t('categories.deleteTitle')}
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
                           )}
                         </div>
                       )}
-                    </div>
-
-                    <div className="flex items-center justify-between mt-8">
-                      <button
-                        onClick={() => loadCategoryWords(category.id)}
-                        className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg font-medium transition-colors flex items-center gap-2"
-                      >
-                        <List className="w-4 h-4" />
-                        Ver palabras
-                      </button>
                       
-                      <button
-                        onClick={() => navigate(`/game/setup?category=${category.id}`)}
-                        className="px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-lg font-medium transition-all flex items-center gap-2 shadow-lg hover:shadow-primary-500/25"
-                      >
-                        <Play className="w-4 h-4" />
-                        Jugar
-                      </button>
+                      <div className="flex items-center justify-between">
+                        <button
+                          onClick={() => loadCategoryWords(category.id)}
+                          className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                        >
+                          <List className="w-4 h-4" />
+                          {t('categories.viewWords')}
+                        </button>
+                        
+                        <button
+                          onClick={() => navigate(`/game/setup?category=${category.id}`)}
+                          className="px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-lg font-medium transition-all flex items-center gap-2 shadow-lg hover:shadow-primary-500/25"
+                        >
+                          <Play className="w-4 h-4" />
+                          {t('categories.play')}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -350,7 +389,6 @@ export default function Categories() {
           </div>
         )}
 
-        {/* Modal para crear categoría */}
         <Modal
           isOpen={isModalOpen}
           onClose={() => {
@@ -358,20 +396,20 @@ export default function Categories() {
             setFormData({ name: '', description: '' });
             setErrors({});
           }}
-          title="Crear Nueva Categoría"
+          title={t('categories.modal.createTitle')}
         >
           <form onSubmit={handleCreateCategory}>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Nombre de la categoría *
+                  {t('categories.modal.nameLabel')} *
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-4 py-3 bg-gray-900 border border-gray-800 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-primary-500"
-                  placeholder="Ej: Animales, Películas, Comida..."
+                  placeholder={t('categories.modal.namePlaceholder')}
                 />
                 {errors.name && (
                   <p className="mt-1 text-sm text-red-500">{errors.name}</p>
@@ -380,16 +418,31 @@ export default function Categories() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Descripción (opcional)
+                  {t('categories.modal.descriptionLabel')}
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="w-full px-4 py-3 bg-gray-900 border border-gray-800 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-primary-500"
-                  placeholder="Breve descripción de la categoría..."
+                  placeholder={t('categories.modal.descriptionPlaceholder')}
                   rows="3"
                 />
               </div>
+
+              {isAdmin && (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="is_default"
+                    checked={formData.is_default || false}
+                    onChange={(e) => setFormData({ ...formData, is_default: e.target.checked })}
+                    className="w-4 h-4 text-primary-600 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
+                  />
+                  <label htmlFor="is_default" className="text-sm text-gray-300">
+                    {t('categories.modal.setDefault')}
+                  </label>
+                </div>
+              )}
 
               <div className="flex justify-end gap-3 pt-4">
                 <button
@@ -397,30 +450,29 @@ export default function Categories() {
                   onClick={() => setIsModalOpen(false)}
                   className="px-6 py-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg font-medium transition-colors"
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
                   className="px-6 py-2 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-lg font-medium transition-all"
                 >
-                  Crear Categoría
+                  {t('categories.modal.createButton')}
                 </button>
               </div>
             </div>
           </form>
         </Modal>
 
-        {/* Modal para editar categoría */}
         <Modal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
-          title="Editar Categoría"
+          title={t('categories.modal.editTitle')}
         >
           <form onSubmit={(e) => { e.preventDefault(); handleEditCategory(); }}>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Nombre de la categoría *
+                  {t('categories.modal.nameLabel')} *
                 </label>
                 <input
                   type="text"
@@ -435,7 +487,7 @@ export default function Categories() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Descripción (opcional)
+                  {t('categories.modal.descriptionLabel')}
                 </label>
                 <textarea
                   value={editFormData.description}
@@ -445,37 +497,51 @@ export default function Categories() {
                 />
               </div>
 
+              {isAdmin && (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="edit_is_default"
+                    checked={editFormData.is_default || false}
+                    onChange={(e) => setEditFormData({ ...editFormData, is_default: e.target.checked })}
+                    className="w-4 h-4 text-primary-600 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
+                  />
+                  <label htmlFor="edit_is_default" className="text-sm text-gray-300">
+                    {t('categories.modal.setDefault')}
+                  </label>
+                </div>
+              )}
+
               <div className="flex justify-end gap-3 pt-4">
                 <button
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
                   className="px-6 py-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg font-medium transition-colors"
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
                   className="px-6 py-2 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-lg font-medium transition-all"
                 >
-                  Guardar Cambios
+                  {t('categories.modal.saveButton')}
                 </button>
               </div>
             </div>
           </form>
         </Modal>
 
-        {/* Modal para ver palabras */}
         <Modal
           isOpen={showWordsModal}
           onClose={() => setShowWordsModal(false)}
-          title={`Palabras - ${selectedCategory?.name || ''}`}
+          title={`${t('categories.wordsModal.title')} - ${selectedCategory?.name || ''}`}
           size="lg"
         >
           <div className="max-h-96 overflow-y-auto">
             {categoryWords.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                <p>No hay palabras en esta categoría</p>
+                <p>{t('categories.wordsModal.noWords')}</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -493,19 +559,18 @@ export default function Categories() {
           <div className="mt-4 pt-4 border-t border-gray-800">
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-400">
-                Total: {categoryWords.length} palabras
+                {t('categories.wordsModal.total')}: {categoryWords.length} {t('categories.words')}
               </span>
               <button
                 onClick={() => setShowWordsModal(false)}
                 className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg font-medium transition-colors"
               >
-                Cerrar
+                {t('common.close')}
               </button>
             </div>
           </div>
         </Modal>
 
-        {/* Modal para añadir palabra */}
         {selectedCategory && (
           <AddWordModal
             isOpen={isWordModalOpen}
@@ -523,15 +588,14 @@ export default function Categories() {
           />
         )}
 
-        {/* Modal de confirmación */}
         <ConfirmModal
           isOpen={confirmModalOpen}
           onClose={() => setConfirmModalOpen(false)}
           onConfirm={handleConfirmDelete}
-          title="Confirmar eliminación"
-          message="¿Estás seguro de que quieres eliminar esta categoría? Se eliminarán todas sus palabras."
-          confirmText="Eliminar"
-          cancelText="Cancelar"
+          title={t('categories.deleteModal.title')}
+          message={t('categories.deleteModal.message')}
+          confirmText={t('common.delete')}
+          cancelText={t('common.cancel')}
           loading={deleteLoading}
         />
       </div>
