@@ -18,6 +18,15 @@ class UserSeeder extends Seeder
             'is_active' => true
         ]);
 
+        User::create([
+            'name' => 'Toni',
+            'email' => 'toni@toni.com',
+            'password' => bcrypt('password'),
+            'role' => 'admin',
+            'language' => 'ca',
+            'is_active' => true
+        ]);
+
         User::factory(10)->create();
     }
 }

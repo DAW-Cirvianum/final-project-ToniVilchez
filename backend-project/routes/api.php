@@ -12,34 +12,26 @@ use App\Http\Controllers\RecoveryController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Middleware\AdminMiddleware;
 
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+*/
+
+// --- RUTES PÚBLIQUES ---
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-
 Route::post('/forgot-password', [PasswordResetController::class, 'send']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
+// Verificació d'email
 Route::get('/email/verify/{id}/{hash}', [RecoveryController::class, 'verifyEmail'])
     ->middleware(['signed'])
     ->name('verification.verify');
-    
-Route::post('/email/resend', [RecoveryController::class, 'resendVerification'])
-    ->middleware('auth:sanctum');
 
-
-Route::get('/sanctum/csrf-cookie', function () {
-    return response()->json(['csrf_token' => csrf_token()]);
-});
-
-Route::match(['options', 'post'], '/set-locale', function (\Illuminate\Http\Request $request) {
-    if ($request->isMethod('options')) {
-        return response('', 200)
-            ->header('Access-Control-Allow-Origin', $request->header('Origin') ?? 'http://localhost:5174')
-            ->header('Access-Control-Allow-Methods', 'POST, OPTIONS')
-            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept')
-            ->header('Access-Control-Allow-Credentials', 'true');
-    }
-    
+// --- GESTIÓ DE LOCALE (IDIOMA) ---
+// Nota: He eliminat els headers manuals. Configura el CORS a config/cors.php
+Route::post('/set-locale', function (\Illuminate\Http\Request $request) {
     $request->validate([
         'locale' => 'required|in:ca,es,en'
     ]);
@@ -55,47 +47,27 @@ Route::match(['options', 'post'], '/set-locale', function (\Illuminate\Http\Requ
         'success' => true,
         'message' => 'Locale updated',
         'locale' => $request->locale
-    ])->cookie($cookie)
-      ->header('Access-Control-Allow-Origin', $request->header('Origin') ?? 'http://localhost:5174')
-      ->header('Access-Control-Allow-Credentials', 'true');
+    ])->cookie($cookie);
 });
 
 Route::get('/current-locale', function (\Illuminate\Http\Request $request) {
-    try {
-        \Log::info('Current locale endpoint called', [
-            'cookies' => $request->cookie(),
-            'user' => $request->user() ? $request->user()->id : 'guest'
-        ]);
-        
-        $cookieLocale = $request->cookie('app_locale');
-        
-        $locale = $cookieLocale ?: 'ca';
-        
-        if (!in_array($locale, ['ca', 'es', 'en'])) {
-            $locale = 'ca';
-        }
-        
-        return response()->json([
-            'locale' => $locale,
-            'available' => ['ca', 'es', 'en'],
-            'fallback_locale' => 'ca',
-            'success' => true
-        ]);
-    } catch (\Exception $e) {
-        \Log::error('Error in current-locale endpoint: ' . $e->getMessage());
-        
-        return response()->json([
-            'locale' => 'ca',
-            'available' => ['ca', 'es', 'en'],
-            'fallback_locale' => 'ca',
-            'success' => false,
-            'error' => 'Server error'
-        ], 500);
-    }
+    $locale = $request->cookie('app_locale') ?: 'ca';
+    if (!in_array($locale, ['ca', 'es', 'en'])) $locale = 'ca';
+    
+    return response()->json([
+        'locale' => $locale,
+        'available' => ['ca', 'es', 'en'],
+        'success' => true
+    ]);
 });
 
+// --- RUTES PROTEGIDES (USUARI AUTENTICAT) ---
 Route::middleware(['auth:sanctum'])->group(function () {
     
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/email/resend', [RecoveryController::class, 'resendVerification']);
+
+    // Perfil d'usuari
     Route::get('/user', function () {
         $user = auth()->user();
         return response()->json([
@@ -115,39 +87,30 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/user', [UserController::class, 'updateProfile']);
     Route::post('/user/avatar', [UserController::class, 'uploadAvatar']);
     
-    Route::get('/games', [GameController::class, 'index']);
-    Route::post('/games', [GameController::class, 'store']);
-    Route::get('/games/{game}', [GameController::class, 'show']);
-    Route::delete('/games/{game}', [GameController::class, 'destroy']);
-    Route::put('/games/{game}', [GameController::class, 'update']);
+    // Partides (Games)
+    Route::apiResource('games', GameController::class);
     
+    // Rondes
     Route::get('/games/{game}/rounds', [RoundController::class, 'index']);
     Route::post('/games/{game}/rounds', [RoundController::class, 'store']);
-    Route::get('/rounds/{round}', [RoundController::class, 'show']);
-    Route::put('/rounds/{round}', [RoundController::class, 'update']);
-    Route::delete('/rounds/{round}', [RoundController::class, 'destroy']);
+    Route::apiResource('rounds', RoundController::class)->except(['index', 'store']);
     
-    Route::get('/categories', [CategoryController::class, 'index']);
-    Route::post('/categories', [CategoryController::class, 'store']);
-    Route::get('/categories/{category}', [CategoryController::class, 'show']);
-    Route::put('/categories/{category}', [CategoryController::class, 'update']);
-    Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
-    
+    // Categories i Paraules
+    Route::apiResource('categories', CategoryController::class);
+    Route::get('/categories/{category}/words-only', function ($categoryId) {
+        $category = \App\Models\Category::with('words')->findOrFail($categoryId);
+        return response()->json(['success' => true, 'data' => $category->words]);
+    });
+
     Route::post('/categories/{category}/words', [WordController::class, 'store']);
     Route::delete('/words/{word}', [WordController::class, 'destroy']);
     Route::get('/words/random', [WordController::class, 'getRandomWord']);
-    
-    Route::get('/categories/{category}/words-only', function ($categoryId) {
-        $category = \App\Models\Category::with('words')->findOrFail($categoryId);
-        return response()->json([
-            'success' => true,
-            'data' => $category->words
-        ]);
-    });
 });
 
+// --- RUTES D'ADMINISTRADOR ---
 Route::middleware(['auth:sanctum', AdminMiddleware::class])->prefix('admin')->group(function () {
     
+    // Gestió d'usuaris
     Route::get('/users', [AdminController::class, 'getUsers']);
     Route::get('/users/{user}', [AdminController::class, 'showUser']);
     Route::put('/users/{user}', [AdminController::class, 'updateUser']);
@@ -155,6 +118,7 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->prefix('admin')->gr
     Route::put('/users/{user}/role', [AdminController::class, 'updateUserRole']);
     Route::put('/users/{user}/toggle-status', [AdminController::class, 'toggleUserStatus']);
     
+    // Gestió de contingut
     Route::get('/categories', [AdminController::class, 'getAllCategories']);
     Route::post('/categories', [AdminController::class, 'createCategory']);
     Route::put('/categories/{category}', [AdminController::class, 'updateCategory']);
@@ -166,21 +130,19 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->prefix('admin')->gr
     Route::delete('/words/{word}', [AdminController::class, 'deleteWord']);
     Route::post('/words/bulk', [AdminController::class, 'bulkCreateWords']);
     
+    // Estadístiques i manteniment
     Route::get('/stats', [AdminController::class, 'getStats']);
     Route::get('/reports/users-activity', [AdminController::class, 'getUsersActivityReport']);
     Route::get('/reports/games-stats', [AdminController::class, 'getGamesStatsReport']);
-    
     Route::get('/export/data', [AdminController::class, 'exportData']);
     Route::post('/import/data', [AdminController::class, 'importData']);
-    
     Route::get('/settings', [AdminController::class, 'getSettings']);
     Route::put('/settings', [AdminController::class, 'updateSettings']);
-    
     Route::post('/backup', [AdminController::class, 'createBackup']);
     Route::post('/maintenance/cleanup', [AdminController::class, 'cleanupOldData']);
-
 });
 
+// --- RUTES DE DESENVOLUPAMENT / DOCUMENTACIÓ ---
 if (config('app.env') !== 'production') {
     Route::get('/documentation', '\L5Swagger\Http\Controllers\SwaggerController@api');
     Route::get('/oauth2-callback', '\L5Swagger\Http\Controllers\SwaggerController@oauth2Callback');
@@ -191,13 +153,14 @@ if (config('app.env') !== 'production') {
             'user' => auth()->user(),
             'is_admin' => auth()->check() && auth()->user()->role === 'admin'
         ]);
-    })->middleware(['auth:sanctum', 'admin']);
+    })->middleware(['auth:sanctum', AdminMiddleware::class]); // Unificat l'ús del middleware
 }
 
+// --- FALLBACK (404) ---
 Route::fallback(function () {
     return response()->json([
         'success' => false,
-        'message' => 'Ruta no encontrada',
+        'message' => 'Ruta no trobada',
         'path' => request()->path()
     ], 404);
 });
